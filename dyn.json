@@ -1,0 +1,1040 @@
+{
+  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "https://stg.paypay-corp.co.jp/opa/api/",
+      "description": "Production server"
+    },
+    {
+      "url": "https://stg.paypay-corp.co.jp/opa/api/",
+      "description": "Staging server"
+    }
+  ],
+  "info": {
+    "version": "1.1",
+    "title": "Dynamic QR Code",
+    "contact": {
+      "name": "API Support"
+    },
+    "x-logo": {
+      "url": "https://image.paypay.ne.jp/page/common/images/img_logo.png",
+      "altText": "PayPay Open Payment Api"
+    },
+    "description": "# Introduction\n\nPayPay Open Payment API (OPA) is designed to be used by our payment partners to make payment-related operations in different scenarios, so as to deliver the best payment experience to end users. After being onboarded as a PayPay OPA client, depending on the contract, you will have the capability on one or more of the below:\n  - Collect payment by directly debiting from PayPay user’s wallet\n  - Create Dynamic QR Code and collect payments via PayPay's App\n  - Use pre-authorization and capture payment flow to facilitate your purchase procedure\n  - Easy web application integration with PayPay cashier page to collect payment\n  - Build your own checkout experience with rich APIs provided by PayPay\n\nThis document will be focusing on APIs that support the second solution for Dynamic QR Code Payment.\n# TLS implementation\nThe PayPay Open Payment API requires that you use TLS 1.2 or higher as a security measure. Note that you cannot connect with TLS1.0 and TLS1.1.\n# Dynamic QR Code Flow\nIn this flow we empower merchants to create a QR Code which can be displayed to the user. The user can then scan the QR Code using PayPay App to process the payment. The merchant can query the status of the payment as well as be notified of the payment to process the order. Details of the flow are shown in the <a href=\"https://docs.google.com/presentation/d/1yJMm_wWfJrt5yGE3rk8PccKYuRwFOkFyUqkCUYvTv-A/edit?usp=sharing\" target=\"_blank\">slides here</a>.\n\n<img src=\"./imgs/dynamicqrcode-sequence.png\">\n# Onboard merchant\n\nTo start utilizing our Open Payment API platform, at first the business needs to be onboarded as a PayPay merchant.\nThis process usually consists of information collection, manual verification, contract confirmation and credentials issuance.\n\nAfter becoming a merchant on PayPay, the following items would be setup for the client:\n\n  - api key and secret\n  - webhook endpoints\n  - client IP whitelist\n\nThis setup can be managed using our merchant panel/ getting in touch with the sales representative.\n"
+  },
+  "tags": [
+    {
+      "name": "QRCode",
+      "description": "Creation of a Dynamic QR Code"
+    },
+    {
+      "name": "Payment",
+      "description": "Everything involved payment life cycle"
+    },
+    {
+      "name": "Specify merchant in request",
+      "description": "As an agent client may link to mulitple merchants, everytime calling an api, the merchant identifier need to be passed along with the request. There are two ways to pass the merchant identifier:\nIn query string:\n```\nassumeMerchant=shop\n```\nOr in http headers:\n```\nX-ASSUME-MERCHANT: auction\n```\nIf both are provided, the query string parameter would take precedence.\n"
+    },
+    {
+      "name": "Error Handling",
+      "description": "PayPay OPA uses HTTP response status codes and OPA error code to indicate the success or\nfailure of the requests. With these information, you can decide what error handling strategy\nto use. In general, PayPay OPA return the following http status codes.\n\n## HTTP 2xx\n\n### 200\n\nEverything works as expected.\n\n### 201\nThe requested resource(e.g. dynamic QR code) was created.\n### 202\n\nMeans the request is received, and will be processed sometime later.\n\n## HTTP 4xx\n\n### 400\n\nThis status code indicates an error because of the information provided in request is not\nable to be processed. The following OPA error code may be returned.\n\n- INVALID_PARAMS\n\n  The infomation provide by the request contains invalid data. E.g. unsupported currency.\n\n- UNACCEPTABLE_OP\n\n  The requested operation is not able to be processed due to the current condition. E.g. the\n  transaction limit exceeded.\n\n- NO_SUFFICIENT_FUND\n\n  There is no sufficient fund for the transaction.\n\n- SUSPECTED_DUPLICATE_PAYMENT\n\n  If a merchant tries collect same amount money from same user again within 5 minutes, the\n  request would be rejected with this very error code. This design is mainly to prevent the\n  duplicated payments which are usually caused by design flaws in client code.\n\n  However, sometimes, the merchant would intentionally collect mutiple same amount payments\n  from a single user. In such case, the client need to send a specific parameter in order to\n  bypass the duplication check. This is detailed in the payment creation api spec.\n\n- INVALID_USER_AUTHORIZATION_ID\n\n  If the user authorization id is expired or revoked by the use. The client need to go through\n  the authorization flow again to get the user authorization id.\n\n- BAD_REQUEST\n\n  Other cases that we did not specificly seperated.\n\n### 401\nThis status code indicates an authorization error. The following OPA error code may be returned.\n- UNAUTHORIZED\n\n No valid api key and secret provided.\n\n- OP_OUT_OF_SCOPE\n\n The operation is not permitted.\n\n- INVALID_USER_AUTHORIZATION_ID\n\n The specified user authorization ID is invalid.\n\n- EXPIRED_USER_AUTHORIZATION_ID\n\n The user authorization ID expired.\n\n\n### 404\n\nThis status code indicates that the requested resource is not existing in the system.\n\n### 429\n\nThis status code indicates that the client sent too many requests in a specific period of time,\nand hit the rate limits. You should slow down the request sending or contact us to rise your\nlimit.\n\n## HTTP 5xx\n\n### 500\n\nThis status code indicates that something went wrong in PayPay side. A few OPA error code\ncould be returned.\n\n- TRANSACTION_FAILED\n\n  This code means the transaciton is failed in PayPay side. You can create new transaction\n  for the same purpose with reasonable backoff time.\n\n- INTERNAL_SERVER_ERROR\n\n  This code means that something goes wrong, but we don't konw exactly if the transaction has\n  happened or not. It should be treatd as unknown payment status.\n\n### 502,503,504\n\nTreated as unkonwn payment status.\n\n## Timeout\n\nThe recommended timeout setting is specified in each API. The most important one is for the\npayment creation api, where the read timeout should not be less than 30 seconds. When timeout\nhappens, it should be treated as unknown payment status.\n\n## Handle unknown payment status\n\nThere are two ways to react with this situation\n\n1. Use the query api to query the transaction status. If the original transaction was failed\n  or not found in PayPay, you can start a new transaction for the same purpose.\n\n2. Or, you can cancel the transaction, if the cancel api is provided. After the cancellation\n    is accepted, you can start a new transaction for the same purpose.\n"
+    },
+    {
+      "name": "Notify users when events occur",
+      "description": "If the user allows notification from the PayPay app, the following will be notified to the user.\n\n### Push Notification\n|  Events  |　Message  |\n|-----------|-----------|\n| Payment |  Payment has been completed. <br> Amount：100 yen <br> Order ID：xxxxxxxxxxxxxxxxxxxx <br> Store Name：TEST STORE\n| Refund |  Order ID: xxxxxxxxxxxxxxxxxxxx <br> The 100 yen refund has been completed. |\n"
+    },
+    {
+      "name": "Recon file",
+      "description": "\nPayPay generates a transaction file by daily processing and notifies it by Webhook.\n\n\n## File linkage specifications\n|   Category   | Description | Note |\n|-----------|-------------|---------|\n|  File linkage method  |  Webhook  |  |\n|  File Name |  transaction_＜merchant_id＞_＜from＞_＜to＞.csv  |   |\n|  File creation unit  |  merchant_id  |  |\n|  Processing cycle  |  Daily  |  Transactions from 00:00:00 to 23:59:59.   |\n|  Notification time  |  after 4:00 AM  |  |\n|  format  |  CSV  |  |\n|  File retention period  |  1 Week  |  |\n\n\n\n\n## File layout\n|   Key   | Value from | Note |\n|-----------|-------------|---------|\n|  Order ID |  order_id  |  Order ID issued by PayPay. |\n|  Merchant ID  |  merchant_id  |  Merchant ID issued by PayPay.   |\n|  Brand name  |  brandName  |  Brand name registered with PayPay. |\n|  Store ID  |  storeId  |  Store ID set in the request.  |\n|  Store name  |  storeName  |  Store name registered with PayPay.   |\n|  Terminal ID  |  terminalId  |  Terminal ID set in the request.  |\n|  Staus  |  ”Payment completed” , ”Payment failed” , \"Refund completed\" , \"Refund failed\"  |    |\n|  Transaction date  |  acceptedAt  |    |\n|  Amount  |  amount  |  There is a minus sign for cancellation.  |\n|  Receipt number  |  orderReceiptNumber  |  Receipt number  |\n|  Payment method  |  ”PayPay balance” , ”credit card”  |    |\n|  Merchant payment ID |  merchantPaymentId  |  Merchant payment ID issued by PayPay.  |\n\n\n<p><a href=\"./files/transaction_recon.csv\" download=\"transaction_000000000000008181_20200130000000_20200130235959.csv\">Download Sample File</a></p>\n\n\n\n## Webhook notifications\nGet the file from the `path` notified by the webhook.\n```\n{\n  \"notification_type\":\"file.created\",\n  \"notification_id\": \"<UUID>\",\n  \"fileType\":\"transaction_recon\",\n  \"path\":\"https://<server_path>/<filename>?parameters\",\n  \"requestedAt\":\"<epoch time>\"\n}\n\n```\n"
+    },
+    {
+      "name": "Response code list",
+      "description": "\n### Common response code\n|   Status   | CodeId | Code | Message |\n|-----------|-------------|---------|----------|\n|  200  |  08100001  |  SUCCESS  |  Success  |\n|  202  |  08100001  |  REQUEST_ACCEPTED  |  Request accepted  |\n|  400  |  08100006  |  INVALID_REQUEST_PARAMS  |  Invalid request params  |\n|  401  |  08100023  |  OP_OUT_OF_SCOPE  |  The operation is not permitted  |\n|  400  |  08100024  |  MISSING_REQUEST_PARAMS  |  |\n|  401  |  08100016  |  UNAUTHORIZED  |  Unauthorized request  |\n|  404  |  08100007  |  OPA_CLIENT_NOT_FOUND  |  OPA Client not found  |\n|  429  |  08100998  |  RATE_LIMIT  |  Too many requests.  |\n|  500  |  08100026\t |  SERVICE_ERROR  | |\n|  500  |  08101000  |  INTERNAL_SERVER_ERROR  |  Something went wrong on PayPay service side  |\n|  503  |  08100999  |  MAINTENANCE_MODE  |  Sorry, we are down for scheduled maintenance.  |\n\n\n\n### Create a QRCode\n|   Status   | CodeId | Code | Message |\n|-----------|-------------|---------|----------|\n|  400  |  01652073  |  DUPLICATE_DYNAMIC_QR_REQUEST  |  Duplicate Dynamic QR request error  |\n\n\n### Delete a QRCode\n|   Status   | CodeId | Code | Message |\n|-----------|-------------|---------|----------|\n|  400  |  01652074  |  DYNAMIC_QR_ALREADY_PAID\t |  Dynamic QR already paid  |\n|  404  |  01652072  |  DYNAMIC_QR_NOT_FOUND  |  Dynamic qr code not found  |\n\n\n### Get payment details\n|   Status   | CodeId | Code | Message |\n|-----------|-------------|---------|----------|\n|  400  |  01652075  |  DYNAMIC_QR_PAYMENT_NOT_FOUND  |  Dynamic QR payment not found  |\n\n\n### Cancel a payment\n|   Status   | CodeId | Code | Message |\n|-----------|-------------|---------|----------|\n|  500  |  00200034  |  INTERNAL_SERVER_ERROR  |  Request timed out  |\n\n\n### Refund a payment\n|   Status   | CodeId | Code | Message |\n|-----------|-------------|---------|----------|\n|  400  |  00200004  |  INVALID_PARAMS  |  Invalid parameters received  |\n|  400  |  00200013  |  UNACCEPTABLE_OP  |  Order cannot be refunded  |\n|  400  |  00200014  |  UNACCEPTABLE_OP  |  Multiple refund not allowed  |\n|  400  |  00200015  |  INVALID_PARAMS  |  Invalid refund amount  |\n|  404  |  00200001  |  RESOURCE_NOT_FOUND  |  Order not found  |\n|  500  |  00200002  |  TRANSACTION_FAILED  |  Transaction failed  |\n|  500  |  00200003  |  TRANSACTION_FAILED  |  Transaction failed  |\n|  500  |  00800017  |  TRANSACTION_FAILED  |  Balance exceeded  |\n|  500  |  00200034  |  INTERNAL_SERVER_ERROR  |  Request timed out  |\n\n\n\n### Get refund details\n|   Status   | CodeId | Code | Message |\n|-----------|-------------|---------|----------|\n|  404  |  00200018  |  NO_SUCH_REFUND_ORDE  |  Refund not found  |\n|  500  |  00200034  |  INTERNAL_SERVER_ERROR  |  Request timed out  |\n"
+    },
+    {
+      "name": "Webhook Setup",
+      "description": "PayPay can send webhook events that notify your application at the time\nwhen event happens on your account. To be able receiving the notification\nthe client need to setup a webhook url where we will use POST method to\nsend data to client. All the notification data will have one\n`notification_type` field which could be used by client service to determine\nwhat event has happend.\nWhen your application receives the notification via webhook, it should respond with a HTTP `200 OK` status code. Although not required, a response body with short text message(like \"OK\") is recommended.\nWith the security concerns, it is highly recommended the client webhook\nendpoint to be protected by basic auth via https. In this case the url\nshould look like\n\n```\nhttps://username:password@the.merchant.com/path/to/webhook\n```\n\nPlease keep reading to learn the notifications that we are currently\nsending to webhook.\nEvents related to transaction.\n"
+    }
+  ],
+  "components": {
+    "parameters": {
+      "requestId": {
+        "in": "header",
+        "name": "X-REQUEST-ID",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Idempotency key is used for safely retrying requests and expires in 24 hours\n"
+      }
+    },
+    "schemas": {
+      "AssumeMerchant": {
+        "type": "string",
+        "maxLength": 80,
+        "description": "If merchant is an agent AND passed via query or header, we will return this back in the response."
+      },
+      "UserAuthorizationId": {
+        "type": "string",
+        "maxLength": 64,
+        "description": "The PayPay user reference id returned by the user authorization flow"
+      },
+      "MerchantPaymentId": {
+        "type": "string",
+        "maxLength": 64,
+        "description": "The unique payment transaction id provided by merchant"
+      },
+      "MerchantRefundId": {
+        "type": "string",
+        "maxLength": 64,
+        "description": "The unique refund transaction id provided by merchant"
+      },
+      "PaymentId": {
+        "type": "string",
+        "maxLength": 64,
+        "description": "The payment transaction id provided by PayPay"
+      },
+      "RefundId": {
+        "type": "string",
+        "maxLength": 64,
+        "description": "The refund transaction id provided by PayPay"
+      },
+      "EpochTime": {
+        "type": "integer",
+        "description": "Epoch timestamp in seconds"
+      },
+      "AuthorizedAt": {
+        "type": "integer",
+        "description": "Epoch timestamp in seconds. Timestamp when status became AUTHORIZED."
+      },
+      "ExpiresAt": {
+        "type": "integer",
+        "description": "Epoch timestamp in seconds. Timestamp when the order expires."
+      },
+      "CompletedAt": {
+        "type": "integer",
+        "description": "Epoch timestamp in seconds. Timestamp when status became COMPLETED."
+      },
+      "CanceledAt": {
+        "type": "integer",
+        "description": "Epoch timestamp in seconds. Timestamp when status became CANCELED."
+      },
+      "RefundedAt": {
+        "type": "integer",
+        "description": "Epoch timestamp in seconds. Timestamp when status became REFUNDED."
+      },
+      "ExpiryDate": {
+        "type": "date",
+        "description": "The date on which the Cashback Expires at midnight"
+      },
+      "MoneyAmount": {
+        "type": "object",
+        "required": ["amount", "currency"],
+        "properties": {
+          "amount": {
+            "maxLength": 11,
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["JPY"]
+          }
+        }
+      },
+      "MerchantOrderItem": {
+        "type": "object",
+        "required": ["name", "quantity", "unitPrice"],
+        "properties": {
+          "name": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Name of the item"
+          },
+          "category": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Category of the item"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maxLength": 11,
+            "description": "Quantity of this item in the current order"
+          },
+          "productId": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Product Id in merchant’s system"
+          },
+          "unitPrice": {
+            "$ref": "#/components/schemas/MoneyAmount"
+          }
+        }
+      },
+      "MerchantOrderItemResponse": {
+        "type": "object",
+        "required": ["name", "quantity", "unit_price"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the item"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the item"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Quantity of this item in the current order"
+          },
+          "productId": {
+            "type": "string",
+            "description": "Product Id in merchant’s system"
+          },
+          "unit_price": {
+            "$ref": "#/components/schemas/MoneyAmount"
+          }
+        }
+      },
+      "QRCode": {
+        "type": "object",
+        "properties": {
+          "merchantPaymentId": {
+            "$ref": "#/components/schemas/MerchantPaymentId"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/MoneyAmount"
+          },
+          "orderDescription": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Description of the order"
+          },
+          "orderItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MerchantOrderItem"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Extra information the merchant want to add"
+          },
+          "codeType": {
+            "type": "string",
+            "description": "Please pass the fixed string “ORDER_QR”"
+          },
+          "storeInfo": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Store info for the merchant"
+          },
+          "storeId": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Id to identify store under merchant"
+          },
+          "terminalId": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Id to identify terminal device under store"
+          },
+          "requestedAt": {
+            "$ref": "#/components/schemas/EpochTime"
+          },
+          "isAuthorization": {
+            "type": "boolean",
+            "description": "By default it will be false, please set true if the amount will be captured later"
+          },
+          "authorizationExpiry": {
+            "type": "integer",
+            "description": "Epoch timestamp in seconds, expiry duration must be less then the expiry granted to the merchant"
+          }
+        }
+      },
+      "QRCodeResponse": {
+        "type": "object",
+        "properties": {
+          "codeId": {
+            "type": "string",
+            "description": "The Id of the QR Code"
+          },
+          "url": {
+            "type": "string",
+            "description": "The url to be resolved as a QR Code"
+          },
+          "deeplink": {
+            "type": "string",
+            "description": "App Deeplink to invoke (Not needed in this flow)"
+          },
+          "expiryDate": {
+            "$ref": "#/components/schemas/EpochTime"
+          },
+          "merchantPaymentId": {
+            "$ref": "#/components/schemas/MerchantPaymentId"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/MoneyAmount"
+          },
+          "orderDescription": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Description of the order"
+          },
+          "orderItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MerchantOrderItemResponse"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Extra information the merchant want to add"
+          },
+          "codeType": {
+            "type": "string",
+            "description": "Please pass the fixed string “ORDER_QR”"
+          },
+          "storeInfo": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Store info for the merchant"
+          },
+          "storeId": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Id to identify store under merchant"
+          },
+          "terminalId": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Id to identify terminal device under store"
+          },
+          "requestedAt": {
+            "$ref": "#/components/schemas/EpochTime"
+          },
+          "redirectUrl": {
+            "type": "string",
+            "description": "The url of redirect after complete the payment"
+          },
+          "redirectType": {
+            "type": "string",
+            "description": "The type of redirect after complete the payment",
+            "enum": ["WEB_LINK", "APP_DEEP_LINK"]
+          },
+          "isAuthorization": {
+            "type": "boolean"
+          },
+          "authorizationExpiry": {
+            "type": "integer"
+          }
+        }
+      },
+      "PaymentOrder": {
+        "type": "object",
+        "properties": {
+          "merchantPaymentId": {
+            "$ref": "#/components/schemas/MerchantPaymentId"
+          },
+          "userAuthorizationId": {
+            "$ref": "#/components/schemas/UserAuthorizationId"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/MoneyAmount"
+          },
+          "requestedAt": {
+            "$ref": "#/components/schemas/EpochTime"
+          },
+          "storeId": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Id to identify store under merchant"
+          },
+          "terminalId": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Id to identify terminal device under store"
+          },
+          "orderReceiptNumber": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Receipt number provided by merchant"
+          },
+          "orderDescription": {
+            "type": "string",
+            "description": "Description of the order"
+          },
+          "orderItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MerchantOrderItem"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Extra information the merchant want to add"
+          }
+        }
+      },
+      "PaymentOrderDetails": {
+        "type": "object",
+        "properties": {
+          "merchantPaymentId": {
+            "$ref": "#/components/schemas/MerchantPaymentId"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/MoneyAmount"
+          },
+          "requestedAt": {
+            "$ref": "#/components/schemas/EpochTime"
+          },
+          "storeId": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Id to identify store under merchant"
+          },
+          "terminalId": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Id to identify terminal device under store"
+          },
+          "orderReceiptNumber": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Receipt number provided by merchant"
+          },
+          "orderDescription": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Description of the order"
+          },
+          "orderItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MerchantOrderItem"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Extra information the merchant want to add"
+          }
+        }
+      },
+      "PaymentState": {
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "$ref": "#/components/schemas/PaymentId"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["CREATED", "AUTHORIZED", "REAUTHORIZING", "COMPLETED", "REFUNDED", "FAILED", "CANCELED", "EXPIRED"]
+          },
+          "expiresAt": {
+            "type": "integer",
+            "$ref": "#/components/schemas/ExpiresAt"
+          },
+          "authorizedAt": {
+            "$ref": "#/components/schemas/AuthorizedAt",
+            "description": "Timestamp"
+          },
+          "acceptedAt": {
+            "$ref": "#/components/schemas/CompletedAt"
+          },
+          "canceledAt": {
+            "$ref": "#/components/schemas/CanceledAt"
+          },
+          "refunds": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Refund"
+                }
+              }
+            }
+          },
+          "captures": {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Capture"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Payment": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PaymentState"
+          },
+          {
+            "$ref": "#/components/schemas/PaymentOrder"
+          }
+        ]
+      },
+      "PaymentDetails": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PaymentState"
+          },
+          {
+            "$ref": "#/components/schemas/PaymentOrderDetails"
+          }
+        ]
+      },
+      "VoidPayment": {
+        "type": "object",
+        "properties": {
+          "merchantPaymentId": {
+            "$ref": "#/components/schemas/MerchantPaymentId"
+          },
+          "paymentId": {
+            "type": "string",
+            "description": "The payment transaction id, if exists"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["noop", "reversed"]
+          }
+        }
+      },
+      "RefundOrder": {
+        "type": "object",
+        "properties": {
+          "assumeMerchant": {
+            "$ref": "#/components/schemas/AssumeMerchant"
+          },
+          "merchantRefundId": {
+            "$ref": "#/components/schemas/MerchantRefundId"
+          },
+          "paymentId": {
+            "$ref": "#/components/schemas/PaymentId"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/MoneyAmount"
+          },
+          "requestedAt": {
+            "$ref": "#/components/schemas/EpochTime"
+          },
+          "reason": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Optional. Max length 255 bytes"
+          }
+        }
+      },
+      "RefundState": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["CREATED", "REFUNDED", "REFUND_FAILED"]
+          },
+          "acceptedAt": {
+            "$ref": "#/components/schemas/RefundedAt"
+          }
+        }
+      },
+      "Refund": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RefundState"
+          },
+          {
+            "$ref": "#/components/schemas/RefundOrder"
+          }
+        ]
+      },
+      "Capture": {
+        "type": "object",
+        "properties": {
+          "merchantCaptureId": {
+            "$ref": "#/components/schemas/MerchantCaptureId"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/MoneyAmount"
+          },
+          "orderDescription": {
+            "type": "string",
+            "description": "Description for Capture"
+          },
+          "requestedAt": {
+            "$ref": "#/components/schemas/EpochTime"
+          },
+          "expiresAt": {
+            "type": "integer",
+            "description": "Epoch timestamp in seconds, expiry duration must be less then the expiry granted to the merchant"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["USER_REQUESTED"],
+            "description": "Status is always USER_REQUESTED."
+          }
+        }
+      },
+      "MerchantCaptureId": {
+        "type": "string",
+        "maxLength": 64,
+        "description": "The unique capture transaction id provided by merchant"
+      },
+      "ResultInfo": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 255,
+            "type": "string"
+          },
+          "message": {
+            "maxLength": 255,
+            "type": "string"
+          },
+          "codeId": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "The code for more specific error inspection"
+          }
+        }
+      },
+      "NotDataResponse": {
+        "type": "object",
+        "properties": {
+          "resultInfo": {
+            "$ref": "#/components/schemas/ResultInfo"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "CreateQRCode": {
+        "description": "QRCode",
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": ["merchantPaymentId", "amount", "codeType"],
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/QRCode"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "CreatePayment": {
+        "description": "Payment",
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": ["userAuthorizationId", "merchantPaymentId", "amount", "requestedAt"],
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/PaymentOrder"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "CreateRefund": {
+        "description": "Refund",
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": ["merchantRefundId", "paymentId", "amount", "requestedAt"],
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/RefundOrder"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotDataResponse"
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "The request has invalid parameters or missing required parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotDataResponse"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "The requested resource doesn't exist",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotDataResponse"
+            }
+          }
+        }
+      },
+      "PreconditionRequired": {
+        "description": "The parameters were valid but the request failed as other precondition is not satisfied",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotDataResponse"
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Something went wrong on PayPay service side",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotDataResponse"
+            }
+          }
+        }
+      },
+      "Accepted": {
+        "description": "The requested is accepted",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotDataResponse"
+            }
+          }
+        }
+      },
+      "Ok": {
+        "description": "The requested succeeded",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NotDataResponse"
+            }
+          }
+        }
+      },
+      "QRCodeDetails": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultInfo": {
+                  "$ref": "#/components/schemas/ResultInfo"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/QRCodeResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PaymentDetails": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultInfo": {
+                  "$ref": "#/components/schemas/ResultInfo"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/PaymentDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "VoidPaymentDetails": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultInfo": {
+                  "$ref": "#/components/schemas/ResultInfo"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/VoidPayment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "RefundDetails": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultInfo": {
+                  "$ref": "#/components/schemas/ResultInfo"
+                },
+                "data": {
+                  "$ref": "#/components/schemas/Refund"
+                }
+              }
+            }
+          }
+        }
+      },
+      "UserProfile0Details": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultInfo": {
+                  "$ref": "#/components/schemas/ResultInfo"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "description": "masked email address"
+                    },
+                    "phoneNumber": {
+                      "type": "string",
+                      "description": "masked phone number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "Basic"
+      }
+    },
+    "security": [
+      {
+        "BasicAuth": []
+      }
+    ]
+  },
+  "paths": {
+    "/v2/codes": {
+      "post": {
+        "tags": ["Payment"],
+        "summary": "Create a QRCode",
+        "description": "Create a dynamic QR Code to receive payments.\n\n**Timeout: 30s**\n",
+        "operationId": "createQRCode",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CreateQRCode"
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/QRCodeDetails"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/v2/codes/{codeId}": {
+      "delete": {
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "tags": ["Payment"],
+        "summary": "Delete a QRCode",
+        "description": "Delete a created dynamic QR Code.\n\n**Timeout: 15s**\n",
+        "operationId": "deleteQRCode",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Ok"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/v2/codes/payments/{merchantPaymentId}": {
+      "$ref": "get_code_preauth_detail_mixin.yaml"
+    },
+    "/v2/payments/{merchantPaymentId}": {
+      "parameters": [
+        {
+          "merchantPaymentId": null,
+          "in": "path",
+          "name": "merchantPaymentId",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/MerchantPaymentId"
+          }
+        }
+      ],
+      "delete": {
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "tags": ["Payment"],
+        "summary": "Cancel a payment",
+        "description": "This api is used in case, while creating a payment, the client can not determine the status of\nthe payment. For example, client get timeout or the response cannot contain the information to\nindicate the exact payment status.\n\nBy calling this api, if accepted, the OPA will guarantee the money eventually goes back to\nuser's account.\n\n</br><b style=\"color:red\">Note:</b> The Cancel API can be used until 00:14:59 AM the day after the Payment has happened. </br>For 00:15 AM or later, please call the refund API to refund the payment.\n\n**Timeout: 15s**\n",
+        "operationId": "cancelPayment",
+        "responses": {
+          "202": {
+            "$ref": "#/components/responses/Accepted"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/v2/payments/capture": {
+      "$ref": "capture_mixin.yaml"
+    },
+    "/v2/payments/preauthorize/revert": {
+      "$ref": "revert_preauth_mixin.yaml"
+    },
+    "/v2/refunds": {
+      "post": {
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "tags": ["Payment"],
+        "summary": "Refund a payment",
+        "description": "Refund a payment.\n\n**Timeout: 30s**\n",
+        "operationId": "refundPayment",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CreateRefund"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RefundDetails"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/v2/refunds/{merchantRefundId}": {
+      "get": {
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "tags": ["Payment"],
+        "summary": "Get refund details",
+        "description": "Get refund details.\n\n**Timeout: 15s**\n",
+        "operationId": "getRefundDetails",
+        "parameters": [
+          {
+            "merchantRefundId": null,
+            "in": "path",
+            "name": "merchantRefundId",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/MerchantRefundId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/RefundDetails"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    }
+  },
+  "x-tagGroups": [
+    {
+      "name": "General",
+      "tags": ["Api Authentication", "Specify merchant in request", "Error Handling"]
+    },
+    {
+      "name": "Apis",
+      "tags": ["Payment", "Wallet", "User"]
+    },
+    {
+      "name": "Notify users",
+      "tags": ["Notify users when events occur"]
+    },
+    {
+      "name": "Webhooks",
+      "tags": ["Webhook Setup", "Transaction Events"]
+    },
+    {
+      "name": "Recon file",
+      "tags": ["Recon file"]
+    },
+    {
+      "name": "Response code",
+      "tags": ["Response code list"]
+    }
+  ]
+}
