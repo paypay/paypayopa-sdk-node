@@ -28,33 +28,33 @@ class PayPayRestSDK {
     auth.setAuth(clientConfig.clientId, clientConfig.clientSecret);
   }
 
-  private static createAuthHeader = (method: string, resourceUrl: string, payLoad: any, auth: any) => {
-    let AUTH_TYPE = "hmac OPA-Auth";
+  private static createAuthHeader = (method: string, resourceUrl: string, body: any, auth: any) => {
     const epoch = Date.now();
-    let contentType = 'application/json';
     const nonce	= uuidv4();
-    let bodyHash = "";
-    if (method == "GET" || !payLoad) {
-      payLoad = "";
-      bodyHash = "empty";
-      contentType = "empty";
-      console.log(`coming inside GET`);
+
+    let contentType = 'application/json';
+    let payload = JSON.stringify(body);
+    let isempty : any = [undefined, null, "", 'undefined', 'null'];
+
+    if (isempty.includes(payload)) {
+      contentType = 'empty';
+      payload = 'empty';
     } else {
       let md5 = CryptoJS.algo.MD5.create();
       md5.update(contentType);
-      md5.update(payLoad);
-      bodyHash = md5
+      md5.update(payload);  
+      payload = md5
         .finalize()
         .toString(CryptoJS.enc.Base64)
         .toString("utf-8");
     }
-    let pathfinder = resourceUrl.split("?");
-    resourceUrl = pathfinder[0];
-    let signatureRawData = [resourceUrl, method, nonce, epoch, contentType, bodyHash].join("\n");
-    let hash = CryptoJS.HmacSHA256(signatureRawData, auth[1]);
-    let hashInBase64 = encodeURI(CryptoJS.enc.Base64.stringify(hash));
-    let header = [auth[0], hashInBase64, nonce, epoch, bodyHash].join(":");
-    return AUTH_TYPE + ":" + header;
+    const signatureRawList = [resourceUrl, method, nonce, epoch, contentType, payload];
+    const signatureRawData = signatureRawList.join("\n");
+    const hashed  = CryptoJS.HmacSHA256(signatureRawData,auth.clientSecret);
+    const hashed64 = CryptoJS.enc.Base64.stringify(hashed);
+    const headList = [auth.clientId, hashed64, nonce, epoch, payload]
+    const header = headList.join(":")
+    return `hmac OPA-Auth:${header}`;
   }
 
   private static setHttpsOptions(header: string) {
