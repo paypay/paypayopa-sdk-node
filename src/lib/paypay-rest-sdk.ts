@@ -52,8 +52,8 @@ class PayPayRestSDK {
     const signatureRawData = signatureRawList.join("\n");
     const hashed  = CryptoJS.HmacSHA256(signatureRawData,auth.clientSecret);
     const hashed64 = CryptoJS.enc.Base64.stringify(hashed);
-    const headList = [auth.clientId, hashed64, nonce, epoch, payload]
-    const header = headList.join(":")
+    const headList = [auth.clientId, hashed64, nonce, epoch, payload];
+    const header = headList.join(":");
     return `hmac OPA-Auth:${header}`;
   }
 
