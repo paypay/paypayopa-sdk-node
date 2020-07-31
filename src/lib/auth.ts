@@ -27,16 +27,6 @@ class Auth {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
   }
-
-  /**
-   * Test authentication and return error to client
-   * @param  {String}   clientId      API_KEY provided by client
-   * @param  {String}   clientSecret  API_SECRET provided by client
-   */
-  testAuth(clientId: string, clientSecret: string) {
-    this.clientId = clientId;
-    this.clientSecret = clientSecret;
-  }
 }
 
 export let auth = new Auth();

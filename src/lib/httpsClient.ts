@@ -31,4 +31,4 @@ class HttpsClient {
   }
 }
 
-export let httpsClient = new HttpsClient();
+export const httpsClient = new HttpsClient();
