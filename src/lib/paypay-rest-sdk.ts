@@ -161,7 +161,7 @@ class PayPayRestSDK {
 
   /**
    * Revert a payment authorization
-   * This api is used in case, the merchant wants to canel the payment authorization because of cancellation of the order by the user
+   * The following api is used when a payment needs to be cancelled. For example, when the user cancels the order
    *
    * @callback                Callback function to handle result
    * @returns {Object}        Returns result containing STATUS and BODY
