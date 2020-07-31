@@ -2,7 +2,7 @@
 'use strict';
 
 /*
- * Handle authentication stuff here,
+ * Handles authentication here.
  * If API exists to return error for client credentials, throw error,
  * Right now, we don't have any such checks, this is a dummy file
  */
