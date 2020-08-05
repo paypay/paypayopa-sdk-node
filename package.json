@@ -3,7 +3,7 @@
   "name": "@paypayopa/paypayopa-sdk-node",
   "version": "0.2.0",
   "description": "Node.js SDK for PayPay APIs",
-  "main": "dist/src/lib/index.js",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/paypay/paypayopa-sdk-node.git"
