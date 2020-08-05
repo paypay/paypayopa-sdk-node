@@ -29,7 +29,7 @@ class PayPayRestSDK {
   }
 
   private static createAuthHeader = (method: string, resourceUrl: string, body: any, auth: any) => {
-    const epoch = Date.now();
+    const epoch = Math.floor(Date.now()/1000);
     const nonce	= uuidv4();
 
     let contentType = 'application/json';
