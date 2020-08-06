@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "test"
+    "test": "jest --coverage --config ./jest.config.js"
   },
   "keywords": [
     "PayPay",
@@ -29,8 +29,11 @@
   },
   "devDependencies": {
     "@types/crypto-js": "^3.1.47",
+    "@types/jest": "^26.0.8",
     "@types/node": "^13.13.15",
-    "typescript": "^4.0.0-dev.20200727"
+    "jest": "^26.2.2",
+    "ts-jest": "^26.1.4",
+    "typescript": "^4.0.0-dev.20200802"
   },
   "directories": {
     "doc": "docs"
