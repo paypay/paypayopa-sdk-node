@@ -25,7 +25,6 @@ describe('Generating PAYPAY TEST CASE', (): any => {
         };
         const exampleProto = Object.getPrototypeOf(payPayRestSDK);
         const token = exampleProto.constructor.createAuthHeader("POST", "/v2/codes", body, auth);
-        console.log(token);
         const tokenSplit = token ? token.split(":") : [];
         expect(tokenSplit).toHaveLength(6);
     });
