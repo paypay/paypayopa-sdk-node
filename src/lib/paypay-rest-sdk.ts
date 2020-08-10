@@ -17,20 +17,20 @@ interface HttpsClientMessage {
 class PayPayRestSDK {
   private static options: any = '';
 
-  constructor() {}
+  constructor() { }
 
   /**
    * Set authentication passed by end-user
    * @param {string} clientId     API_KEY provided by end-user
    * @param {string} clientSecret API_SECRET provided by end-user
    */
-  public configure(clientConfig: { clientId: string; clientSecret: string }) {
-    auth.setAuth(clientConfig.clientId, clientConfig.clientSecret);
+  public configure(clientConfig: { clientId: string; clientSecret: string; merchantId: string; }) {
+    auth.setAuth(clientConfig.clientId, clientConfig.clientSecret, clientConfig.merchantId);
   }
 
   private static createAuthHeader = (method: string, resourceUrl: string, body: any, auth: any) => {
     const epoch = Math.floor(Date.now()/1000);
-    const nonce	= uuidv4();
+    const nonce = uuidv4();
 
     let contentType = 'application/json';
     let payload = JSON.stringify(body);
@@ -42,7 +42,7 @@ class PayPayRestSDK {
     } else {
       let md5 = CryptoJS.algo.MD5.create();
       md5.update(contentType);
-      md5.update(payload);  
+      md5.update(payload);
       payload = md5
         .finalize()
         .toString(CryptoJS.enc.Base64)
@@ -64,7 +64,8 @@ class PayPayRestSDK {
       path: '',
       method: '',
       headers: {
-        Authorization: header,
+        "Authorization": header,
+        "X-ASSUME-MERCHANT": auth.merchantId,
       },
     };
     config.setHttpsOptions(this.options);
@@ -73,23 +74,25 @@ class PayPayRestSDK {
   private static paypaySetupOptions(nameApi: string, nameMethod: string, input: any) {
     let queryParams = [];
     PayPayRestSDK.options = config.getHttpsOptions();
-    this.options.path = config.getHttpsPath(nameApi, nameMethod);
-    this.options.method = config.getHttpsMethod(nameApi, nameMethod);
     const authHeader = this.createAuthHeader(this.options.method,
-                                               this.options.path,
-                                               input,
-                                               auth)
-    if (false === config.getHttpsOptions() || undefined === config.getHttpsOptions()) {
-      this.setHttpsOptions(authHeader);
-    }
+                                              this.options.path,
+                                              input,
+                                              auth);
+    this.setHttpsOptions(authHeader);
+
+    PayPayRestSDK.options.path = config.getHttpsPath(nameApi, nameMethod);
+    PayPayRestSDK.options.method = config.getHttpsMethod(nameApi, nameMethod);
+
     if (this.options.method === 'POST') {
       this.options.headers['Content-Type'] = 'application/json';
       this.options.headers['Content-Length'] = Buffer.byteLength(JSON.stringify(input));
     } else {
       queryParams = this.options.path.match(/{\w+}/g);
-      queryParams.forEach((q: any, n: string | number) => {
-        this.options.path = this.options.path.replace(q, input[n]);
-      });
+      if (queryParams) {
+        queryParams.forEach((q: any, n: string | number) => {
+          this.options.path = this.options.path.replace(q, input[n]);
+        });
+      }
     }
     return this.options;
   }
@@ -235,6 +238,18 @@ class PayPayRestSDK {
    */
   public authorizationResult(inputParams: Array<string | number>, callback: HttpsClientMessage): void {
     httpsClient.httpsCall(PayPayRestSDK.paypaySetupOptions('API_DIRECT_DEBIT', 'AUTHORIZATION_RESULT', inputParams), '', (result: any) => {
+      callback(result);
+    });
+  }
+
+/**
+ * Create an account link QR Code to authorise OPA client
+ * @callback                Callback function to handle result
+ * @returns {Object}        Returns result containing STATUS and BODY
+ * @param {Object} payload  JSON object payload
+ */
+  public accountLinkQRCodeCreate(payload: any, callback: HttpsClientMessage): void {
+    httpsClient.httpsCall(PayPayRestSDK.paypaySetupOptions('API_ACCOUNT_LINK', 'QRCODE_CREATE', payload), payload, (result: any) => {
       callback(result);
     });
   }
