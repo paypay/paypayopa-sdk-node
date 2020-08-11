@@ -16,4 +16,5 @@ export = {
   CheckUserWalletBalance: payPayRestSDK.checkUserWalletBalance,
   Authorization: payPayRestSDK.authorization,
   AuthorizationResult: payPayRestSDK.authorizationResult,
+  AccountLinkQRCodeCreate: payPayRestSDK.accountLinkQRCodeCreate,
 };

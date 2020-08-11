@@ -10,12 +10,14 @@
 class Auth {
   clientId: string;
   clientSecret: string;
+  merchantId: string;
   /**
    * Set intial values to empty string
    */
   constructor() {
     this.clientId = '';
     this.clientSecret = '';
+    this.merchantId = '';
   }
 
   /**
@@ -23,9 +25,10 @@ class Auth {
    * @param  {String}   clientId      API_KEY provided by client
    * @param  {String}   clientSecret  API_SECRET provided by client
    */
-  setAuth(clientId: string, clientSecret: string) {
+  setAuth(clientId: string, clientSecret: string, merchantId: string) {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
+    this.merchantId = merchantId;
   }
 }
 

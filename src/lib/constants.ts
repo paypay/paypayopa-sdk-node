@@ -53,4 +53,10 @@ export default {
   },
   API_APP_INVOKE: {},
   API_WEB_CASHIER: {},
+  API_ACCOUNT_LINK: {
+    QRCODE_CREATE: {
+      METHOD: 'POST',
+      PATH: 'qr/sessions',
+    }
+  }
 };

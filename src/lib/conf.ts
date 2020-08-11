@@ -12,10 +12,11 @@ interface Config {
   API_DIRECT_DEBIT: {};
   API_APP_INVOKE: {};
   API_WEB_CASHIER: {};
+  API_ACCOUNT_LINK: {};
 }
 
 class Conf {
-  options: any;
+  options: { [k: string]: any } = {};
   private readonly configLookup: any;
   private readonly config: Config = {
     HOST_NAME: 'stg.paypay-corp.co.jp',
@@ -72,6 +73,12 @@ class Conf {
     },
     API_APP_INVOKE: {},
     API_WEB_CASHIER: {},
+    API_ACCOUNT_LINK: {
+      QRCODE_CREATE: {
+        METHOD: 'POST',
+        PATH: 'qr/sessions',
+      }
+    }
   };
 
   constructor() {
@@ -83,7 +90,7 @@ class Conf {
   }
 
   getHttpsOptions() {
-    return this.options === '' ? false : this.options;
+    return this.options;
   }
 
   getHttpsMethod(nameApi: any, nameMethod: any): any {
