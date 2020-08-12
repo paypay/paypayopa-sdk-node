@@ -23,7 +23,7 @@
     "@types/uuid": "^8.0.0",
     "crypto-js": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
-    "uuid": "^1.0.7"
+    "uuid": "^8.3.0"
   },
   "engines": {
     "node": ">=8.0.0",
