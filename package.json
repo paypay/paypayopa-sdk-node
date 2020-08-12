@@ -19,8 +19,10 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/uuid": "^8.0.0",
     "crypto-js": "^4.0.0",
+    "jsonwebtoken": "^8.5.1",
     "uuid": "^1.0.7"
   },
   "engines": {

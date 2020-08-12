@@ -1,4 +1,3 @@
-/* Copyright 2020, Robosoft */
 'use strict';
 
 import { payPayRestSDK } from './lib/paypay-rest-sdk';
@@ -17,4 +16,5 @@ export = {
   Authorization: payPayRestSDK.authorization,
   AuthorizationResult: payPayRestSDK.authorizationResult,
   AccountLinkQRCodeCreate: payPayRestSDK.accountLinkQRCodeCreate,
+  ValidateJWT: payPayRestSDK.validateJWT,
 };
