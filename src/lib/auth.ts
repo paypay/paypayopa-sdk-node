@@ -1,4 +1,3 @@
-/* Copyright 2020, Robosoft */
 'use strict';
 
 /*

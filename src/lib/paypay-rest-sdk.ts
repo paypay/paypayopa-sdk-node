@@ -1,4 +1,3 @@
-/* Copyright 2020, Robosoft */
 'use strict';
 
 /*
@@ -9,6 +8,7 @@ import { config } from './conf';
 import { httpsClient } from './httpsClient';
 import CryptoJS from 'crypto-js';
 import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
 
 interface HttpsClientMessage {
   (message: string): void;
@@ -58,43 +58,41 @@ class PayPayRestSDK {
   }
 
   private static setHttpsOptions(header: string) {
-    PayPayRestSDK.options = {
-      hostname: config.getHostname(),
-      port: config.getPortNumber(),
-      path: '',
-      method: '',
-      headers: {
+    PayPayRestSDK.options.hostname = config.getHostname(),
+    PayPayRestSDK.options.port = config.getPortNumber(),
+    PayPayRestSDK.options.headers = {
         "Authorization": header,
         "X-ASSUME-MERCHANT": auth.merchantId,
-      },
-    };
+      };
     config.setHttpsOptions(this.options);
   }
 
   private static paypaySetupOptions(nameApi: string, nameMethod: string, input: any) {
+
     let queryParams = [];
     PayPayRestSDK.options = config.getHttpsOptions();
-    const authHeader = this.createAuthHeader(this.options.method,
-                                              this.options.path,
-                                              input,
-                                              auth);
-    this.setHttpsOptions(authHeader);
 
     PayPayRestSDK.options.path = config.getHttpsPath(nameApi, nameMethod);
     PayPayRestSDK.options.method = config.getHttpsMethod(nameApi, nameMethod);
 
-    if (this.options.method === 'POST') {
-      this.options.headers['Content-Type'] = 'application/json';
-      this.options.headers['Content-Length'] = Buffer.byteLength(JSON.stringify(input));
+    const authHeader = this.createAuthHeader(PayPayRestSDK.options.method,
+                                              PayPayRestSDK.options.path,
+                                              input,
+                                              auth);
+    this.setHttpsOptions(authHeader);
+
+    if (PayPayRestSDK.options.method === 'POST') {
+      PayPayRestSDK.options.headers['Content-Type'] = 'application/json';
+      PayPayRestSDK.options.headers['Content-Length'] = Buffer.byteLength(JSON.stringify(input));
     } else {
-      queryParams = this.options.path.match(/{\w+}/g);
+      queryParams = PayPayRestSDK.options.path.match(/{\w+}/g);
       if (queryParams) {
         queryParams.forEach((q: any, n: string | number) => {
-          this.options.path = this.options.path.replace(q, input[n]);
+          PayPayRestSDK.options.path = PayPayRestSDK.options.path.replace(q, input[n]);
         });
       }
     }
-    return this.options;
+    return PayPayRestSDK.options;
   }
 
   /**
@@ -252,6 +250,16 @@ class PayPayRestSDK {
     httpsClient.httpsCall(PayPayRestSDK.paypaySetupOptions('API_ACCOUNT_LINK', 'QRCODE_CREATE', payload), payload, (result: any) => {
       callback(result);
     });
+  }
+
+  /**
+   * Verify the validity of a JWT token
+   * @returns {Object}               Returns the decoded token
+   * @param {Object} token           The token to be verified
+   * @param {Object} clientSecret    The client secret to be used for verification
+   */
+  public validateJWT(token: string, clientSecret: string): string | object {
+      return jwt.verify(token, Buffer.from(clientSecret, 'base64'));
   }
 }
 
