@@ -6,6 +6,7 @@ export = {
   Configure: payPayRestSDK.configure,
   QRCodeCreate: payPayRestSDK.qrCodeCreate,
   QRCodeDelete: payPayRestSDK.qrCodeDelete,
+  GetCodePaymentDetails: payPayRestSDK.getCodePaymentDetails,
   GetPaymentDetails: payPayRestSDK.getPaymentDetails,
   PaymentCancel: payPayRestSDK.paymentCancel,
   PaymentAuthCapture: payPayRestSDK.paymentAuthCapture,

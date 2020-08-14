@@ -1,9 +1,6 @@
-/* Copyright 2020, Robosoft */
 'use strict';
 
-import CONSTANTS from './constants';
-
-interface Config {
+export interface Config {
   HOST_NAME: string;
   BASE_PATH: string;
   PORT_NUMBER?: number;
@@ -15,60 +12,64 @@ interface Config {
   API_ACCOUNT_LINK: {};
 }
 
-class Conf {
+export class Conf {
   options: { [k: string]: any } = {};
   private readonly configLookup: any;
   private readonly config: Config = {
-    HOST_NAME: 'stg.paypay-corp.co.jp',
-    BASE_PATH: '/opa/api/v1/',
+    HOST_NAME: 'stg-api.sandbox.paypay.ne.jp',
+    BASE_PATH: '/v2/',
     API_PAYMENT: {
       QRCODE_CREATE: {
         METHOD: 'POST',
-        PATH: 'codes',
+        PATH: '/v2/codes',
       },
       QRCODE_DELETE: {
         METHOD: 'DELETE',
-        PATH: 'codes/{codeId}',
+        PATH: '/v2/codes/{codeId}',
+      },
+      GET_CODE_PAYMENT_DETAILS: {
+        METHOD: 'GET',
+        PATH: '/v2/codes/payments/{merchantPaymentId}',
       },
       GET_PAYMENT_DETAILS: {
         METHOD: 'GET',
-        PATH: 'payments/{merchantPaymentId}',
-      },
+        PATH: '/v2/payments/{merchantPaymentId}',
+      },      
       CANCEL_PAYMENT: {
         METHOD: 'DELETE',
-        PATH: 'payments/{merchantPaymentId}',
+        PATH: '/v2/payments/{merchantPaymentId}',
       },
       PAYMENT_AUTH_CAPTURE: {
         METHOD: 'POST',
-        PATH: 'payments/capture',
+        PATH: '/v2/payments/capture',
       },
       PAYMENT_AUTH_REVERT: {
         METHOD: 'POST',
-        PATH: 'payments/preauthorize/revert',
+        PATH: '/v2/payments/preauthorize/revert',
       },
       REFUND_PAYMENT: {
         METHOD: 'POST',
-        PATH: 'refunds',
+        PATH: '/v2/refunds',
       },
       GET_REFUND_DETAILS: {
         METHOD: 'GET',
-        PATH: 'refunds/{merchantRefundId}',
+        PATH: '/v2/refunds/{merchantRefundId}',
       },
     },
     API_WALLET: {
       CHECK_BALANCE: {
         METHOD: 'GET',
-        PATH: 'wallet/check_balance?userAuthorizationId={userAuthorizationId}&amount={amount}&currency={currency}',
+        PATH: '/v2/wallet/check_balance?userAuthorizationId={userAuthorizationId}&amount={amount}&currency={currency}',
       },
     },
     API_DIRECT_DEBIT: {
       AUTHORIZATION: {
         METHOD: 'GET',
-        PATH: 'user_authorization?apiKey={apiKey}&requestToken={jwtToken}',
+        PATH: '/v2/user_authorization?apiKey={apiKey}&requestToken={jwtToken}',
       },
       AUTHORIZATION_RESULT: {
         METHOD: 'GET',
-        PATH: 'user_authorization?apiKey={apiKey}&responseToken={jwtToken}',
+        PATH: '/v2/user_authorization?apiKey={apiKey}&responseToken={jwtToken}',
       },
     },
     API_APP_INVOKE: {},
@@ -76,13 +77,84 @@ class Conf {
     API_ACCOUNT_LINK: {
       QRCODE_CREATE: {
         METHOD: 'POST',
-        PATH: 'qr/sessions',
+        PATH: '/v1/qr/sessions',
       }
     }
   };
 
-  constructor() {
-    this.configLookup = JSON.parse(JSON.stringify(this.config));
+  private readonly prodConfig:Config = {
+    HOST_NAME: 'api.paypay.ne.jp',
+    BASE_PATH: '/v2/',
+    API_PAYMENT: {
+      QRCODE_CREATE: {
+        METHOD: 'POST',
+        PATH: '/v2/codes',
+      },
+      QRCODE_DELETE: {
+        METHOD: 'DELETE',
+        PATH: '/v2/codes/{codeId}',
+      },
+      GET_CODE_PAYMENT_DETAILS: {
+        METHOD: 'GET',
+        PATH: '/v2/codes/payments/{merchantPaymentId}',
+      },
+      GET_PAYMENT_DETAILS: {
+        METHOD: 'GET',
+        PATH: '/v2/payments/{merchantPaymentId}',
+      },
+      CANCEL_PAYMENT: {
+        METHOD: 'DELETE',
+        PATH: '/v2/payments/{merchantPaymentId}',
+      },
+      PAYMENT_AUTH_CAPTURE: {
+        METHOD: 'POST',
+        PATH: '/v2/payments/capture',
+      },
+      PAYMENT_AUTH_REVERT: {
+        METHOD: 'POST',
+        PATH: '/v2/payments/preauthorize/revert',
+      },
+      REFUND_PAYMENT: {
+        METHOD: 'POST',
+        PATH: '/v2/refunds',
+      },
+      GET_REFUND_DETAILS: {
+        METHOD: 'GET',
+        PATH: '/v2/refunds/{merchantRefundId}',
+      },
+    },
+    API_WALLET: {
+      CHECK_BALANCE: {
+        METHOD: 'GET',
+        PATH: '/v2/wallet/check_balance?userAuthorizationId={userAuthorizationId}&amount={amount}&currency={currency}',
+      },
+    },
+    API_DIRECT_DEBIT: {
+      AUTHORIZATION: {
+        METHOD: 'GET',
+        PATH: '/v2/user_authorization?apiKey={apiKey}&requestToken={jwtToken}',
+      },
+      AUTHORIZATION_RESULT: {
+        METHOD: 'GET',
+        PATH: '/v2/user_authorization?apiKey={apiKey}&responseToken={jwtToken}',
+      },
+    },
+    API_APP_INVOKE: {},
+    API_WEB_CASHIER: {},
+    API_ACCOUNT_LINK: {
+      QRCODE_CREATE: {
+        METHOD: 'POST',
+        PATH: '/v1/qr/sessions',
+      }
+    }
+  };
+
+  constructor(productionMode: boolean = false) {
+    if (productionMode) {
+      this.configLookup = JSON.parse(JSON.stringify(this.prodConfig));
+    } else {
+      this.configLookup = JSON.parse(JSON.stringify(this.config));
+    }
   }
 
   setHttpsOptions(options: any) {
@@ -98,11 +170,11 @@ class Conf {
   }
 
   getHttpsPath(nameApi: string | number, nameMethod: string | number) {
-    return this.configLookup.BASE_PATH + this.configLookup[nameApi][nameMethod].PATH;
+    return this.configLookup[nameApi][nameMethod].PATH;
   }
 
   getHostname() {
-    return CONSTANTS.HOST_NAME;
+    return this.configLookup.HOST_NAME;
   }
 
   getPortNumber() {
@@ -110,4 +182,4 @@ class Conf {
   }
 }
 
-export let config = new Conf();
+// export let config = new Conf();
