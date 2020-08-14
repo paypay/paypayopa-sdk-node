@@ -27,5 +27,5 @@ Once you have understood the payment flow, before we start the integration make 
 
 ### Install npm package
 ```sh
-$ npm install paypayopa
+$ npm i @paypayopa/paypayopa-sdk-node
 ```
