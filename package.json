@@ -10,7 +10,7 @@
     "url": "git+https://github.com/paypay/paypayopa-sdk-node.git"
   },
   "scripts": {
-    "tsc": "tsc -p tsconfig.json",
+    "tsc": "tsc",
     "prepublish": "npm run tsc",
     "test": "test",
     "clean": "rm -rf ./.nyc_output ./node_modules/.cache ./coverage",
