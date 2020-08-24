@@ -10,6 +10,7 @@ export interface Config {
   API_APP_INVOKE: {};
   API_WEB_CASHIER: {};
   API_ACCOUNT_LINK: {};
+  API_SUBSCRIPTION: {};
 }
 
 export class Conf {
@@ -43,6 +44,18 @@ export class Conf {
         METHOD: 'POST',
         PATH: '/v2/payments/capture',
       },
+      PREAUTHORIZE: {
+        METHOD: 'POST',
+        PATH: '/v2/payments/preauthorize',
+      },  
+      REVERT_PREAUTHORIZE: {
+        METHOD: 'POST',
+        PATH: '/v2/payments/preauthorize/revert',
+      },       
+      CAPTURE: {
+        METHOD: 'POST',
+        PATH: '/v2/payments/capture',
+      },        
       PAYMENT_AUTH_REVERT: {
         METHOD: 'POST',
         PATH: '/v2/payments/preauthorize/revert',
@@ -79,6 +92,12 @@ export class Conf {
         METHOD: 'POST',
         PATH: '/v1/qr/sessions',
       }
+    },
+    API_SUBSCRIPTION: {
+      PAYMENTS: {
+        METHOD: 'POST',
+        PATH: '/v1/subscription/payments',
+      }
     }
   };
 
@@ -114,6 +133,18 @@ export class Conf {
         METHOD: 'POST',
         PATH: '/v2/payments/preauthorize/revert',
       },
+      PREAUTHORIZE: {
+        METHOD: 'POST',
+        PATH: '/v2/payments/preauthorize',
+      },  
+      REVERT_PREAUTHORIZE: {
+        METHOD: 'POST',
+        PATH: '/v2/payments/preauthorize/revert',
+      },        
+      CAPTURE: {
+        METHOD: 'POST',
+        PATH: '/v2/payments/capture',
+      },       
       REFUND_PAYMENT: {
         METHOD: 'POST',
         PATH: '/v2/refunds',
@@ -145,6 +176,12 @@ export class Conf {
       QRCODE_CREATE: {
         METHOD: 'POST',
         PATH: '/v1/qr/sessions',
+      }
+    },
+    API_SUBSCRIPTION: {
+      PAYMENTS: {
+        METHOD: 'POST',
+        PATH: '/v1/subscription/payments',
       }
     }
   };
