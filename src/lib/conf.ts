@@ -2,7 +2,6 @@
 
 export interface Config {
   HOST_NAME: string;
-  BASE_PATH: string;
   PORT_NUMBER?: number;
   API_PAYMENT: {};
   API_WALLET: {};
@@ -17,7 +16,6 @@ export class Conf {
   private readonly configLookup: any;
   private readonly config: Config = {
     HOST_NAME: 'stg-api.sandbox.paypay.ne.jp',
-    BASE_PATH: '/v2/',
     API_PAYMENT: {
       QRCODE_CREATE: {
         METHOD: 'POST',
@@ -84,7 +82,6 @@ export class Conf {
 
   private readonly prodConfig:Config = {
     HOST_NAME: 'api.paypay.ne.jp',
-    BASE_PATH: '/v2/',
     API_PAYMENT: {
       QRCODE_CREATE: {
         METHOD: 'POST',
