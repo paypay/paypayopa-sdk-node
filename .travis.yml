@@ -1,12 +1,22 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=cbd6f734a0585395a1e664feb0be141affd12ea562966f98fa8f81d29e868e30
 language: node_js
 cache:
   yarn: true
   directories:
     - node_modules
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 node_js:
   - 'lts/*'
   - 'node'
   - '14'
   - '12'
   - '10'
-after_success: yarn report && yarn coveralls
+after_success: 
+ - yarn report && yarn coveralls
+ - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
+ - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
