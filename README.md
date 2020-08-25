@@ -1,5 +1,6 @@
 # Paypay OPA SDK - Node
 [![License](https://img.shields.io/:license-apache2.0-red.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build Status](https://travis-ci.org/paypay/paypayopa-sdk-node.svg?branch=master)](https://travis-ci.org/paypay/paypayopa-sdk-node)
 [![Coverage Status](https://coveralls.io/repos/github/paypay/paypayopa-sdk-node/badge.svg?branch=master)](https://coveralls.io/github/paypay/paypayopa-sdk-node?branch=master)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/paypay/paypayopa-sdk-node.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/paypay/paypayopa-sdk-node/context:javascript)
 [![Maintainability](https://api.codeclimate.com/v1/badges/e3cf7a7e9153531b0f48/maintainability)](https://codeclimate.com/github/paypay/paypayopa-sdk-node/maintainability)
