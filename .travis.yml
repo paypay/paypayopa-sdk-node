@@ -4,6 +4,9 @@ cache:
   directories:
     - node_modules
 node_js:
-  - '8'
+  - 'lts/*'
+  - 'node'
+  - '14'
+  - '12'
   - '10'
 after_success: yarn report && yarn coveralls
