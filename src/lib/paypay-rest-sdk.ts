@@ -284,6 +284,18 @@ class PayPayRestSDK {
   public validateJWT(token: string, clientSecret: string): string | object {
       return jwt.verify(token, Buffer.from(clientSecret, 'base64'));
   }
+
+  public paymentPreauthorize = (payload: any, callback: HttpsClientMessage): void => {
+    httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'PREAUTHORIZE', payload), payload, (result: any) => {
+      callback(result);
+    })
+  }
+
+  public paymentSubscription = (payload: any, callback: HttpsClientMessage): void => {
+    httpsClient.httpsCall(this.paypaySetupOptions('API_SUBSCRIPTION', 'PAYMENTS', payload), payload, (result: any) => {
+      callback(result);
+    })
+  }
 }
 
 /**

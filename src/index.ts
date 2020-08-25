@@ -12,10 +12,12 @@ export = {
   PaymentAuthCapture: payPayRestSDK.paymentAuthCapture,
   PaymentAuthRevert: payPayRestSDK.paymentAuthRevert,
   PaymentRefund: payPayRestSDK.paymentRefund,
+  PaymentPreauthorize: payPayRestSDK.paymentPreauthorize,
   GetRefundDetails: payPayRestSDK.getRefundDetails,
   CheckUserWalletBalance: payPayRestSDK.checkUserWalletBalance,
   Authorization: payPayRestSDK.authorization,
   AuthorizationResult: payPayRestSDK.authorizationResult,
   AccountLinkQRCodeCreate: payPayRestSDK.accountLinkQRCodeCreate,
   ValidateJWT: payPayRestSDK.validateJWT,
+  CreateSubscriptionPayment: payPayRestSDK.paymentSubscription,
 };

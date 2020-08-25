@@ -12,6 +12,7 @@ export interface Config {
   API_APP_INVOKE: {};
   API_WEB_CASHIER: {};
   API_ACCOUNT_LINK: {};
+  API_SUBSCRIPTION: {};
 }
 
 export class Conf {

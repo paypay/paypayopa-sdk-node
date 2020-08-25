@@ -29,6 +29,10 @@
       "METHOD": "POST",
       "PATH": "/v2/payments/preauthorize/revert"
     },
+    "PREAUTHORIZE": {
+      "METHOD": "POST",
+      "PATH": "/v2/payments/preauthorize"
+    },    
     "REFUND_PAYMENT": {
       "METHOD": "POST",
       "PATH": "/v2/refunds"
@@ -61,5 +65,11 @@
       "METHOD": "POST",
       "PATH": "/v1/qr/sessions"
     }
-  }
+  },
+  "API_SUBSCRIPTION": {
+    "PAYMENTS": {
+      "METHOD": "POST",
+      "PATH": "/v1/subscription/payments"
+    }
+  } 
 }
