@@ -13,8 +13,6 @@ export = {
   PaymentAuthRevert: payPayRestSDK.paymentAuthRevert,
   PaymentRefund: payPayRestSDK.paymentRefund,
   PaymentPreauthorize: payPayRestSDK.paymentPreauthorize,
-  PaymentRevertPreauthorize: payPayRestSDK.paymentRevertPreauthorize,
-  PaymentCapture: payPayRestSDK.paymentCapture,
   GetRefundDetails: payPayRestSDK.getRefundDetails,
   CheckUserWalletBalance: payPayRestSDK.checkUserWalletBalance,
   Authorization: payPayRestSDK.authorization,

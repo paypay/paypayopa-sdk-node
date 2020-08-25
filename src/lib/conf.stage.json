@@ -1,0 +1,75 @@
+{
+  "HOST_NAME": "stg-api.sandbox.paypay.ne.jp",
+  "API_PAYMENT": {
+    "QRCODE_CREATE": {
+      "METHOD": "POST",
+      "PATH": "/v2/codes"
+    },
+    "QRCODE_DELETE": {
+      "METHOD": "DELETE",
+      "PATH": "/v2/codes/{codeId}"
+    },
+    "GET_CODE_PAYMENT_DETAILS": {
+      "METHOD": "GET",
+      "PATH": "/v2/codes/payments/{merchantPaymentId}"
+    },
+    "GET_PAYMENT_DETAILS": {
+      "METHOD": "GET",
+      "PATH": "/v2/payments/{merchantPaymentId}"
+    },
+    "CANCEL_PAYMENT": {
+      "METHOD": "DELETE",
+      "PATH": "/v2/payments/{merchantPaymentId}"
+    },
+    "PAYMENT_AUTH_CAPTURE": {
+      "METHOD": "POST",
+      "PATH": "/v2/payments/capture"
+    },
+    "PAYMENT_AUTH_REVERT": {
+      "METHOD": "POST",
+      "PATH": "/v2/payments/preauthorize/revert"
+    },
+    "PREAUTHORIZE": {
+      "METHOD": "POST",
+      "PATH": "/v2/payments/preauthorize"
+    },    
+    "REFUND_PAYMENT": {
+      "METHOD": "POST",
+      "PATH": "/v2/refunds"
+    },
+    "GET_REFUND_DETAILS": {
+      "METHOD": "GET",
+      "PATH": "/v2/refunds/{merchantRefundId}"
+    }
+  },
+  "API_WALLET": {
+    "CHECK_BALANCE": {
+      "METHOD": "GET",
+      "PATH": "/v2/wallet/check_balance?userAuthorizationId={userAuthorizationId}&amount={amount}&currency={currency}"
+    }
+  },
+  "API_DIRECT_DEBIT": {
+    "AUTHORIZATION": {
+      "METHOD": "GET",
+      "PATH": "/v2/user_authorization?apiKey={apiKey}&requestToken={jwtToken}"
+    },
+    "AUTHORIZATION_RESULT": {
+      "METHOD": "GET",
+      "PATH": "/v2/user_authorization?apiKey={apiKey}&responseToken={jwtToken}"
+    }
+  },
+  "API_APP_INVOKE": {},
+  "API_WEB_CASHIER": {},
+  "API_ACCOUNT_LINK": {
+    "QRCODE_CREATE": {
+      "METHOD": "POST",
+      "PATH": "/v1/qr/sessions"
+    }
+  },
+  "API_SUBSCRIPTION": {
+    "PAYMENTS": {
+      "METHOD": "POST",
+      "PATH": "/v1/subscription/payments"
+    }
+  } 
+}

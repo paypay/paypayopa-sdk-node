@@ -291,18 +291,6 @@ class PayPayRestSDK {
     })
   }
 
-  public paymentRevertPreauthorize = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'REVERT_PREAUTHORIZE', payload), payload, (result: any) => {
-      callback(result);
-    })
-  }
-
-  public paymentCapture = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'CAPTURE', payload), payload, (result: any) => {
-      callback(result);
-    })
-  }
-
   public paymentSubscription = (payload: any, callback: HttpsClientMessage): void => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_SUBSCRIPTION', 'PAYMENTS', payload), payload, (result: any) => {
       callback(result);
