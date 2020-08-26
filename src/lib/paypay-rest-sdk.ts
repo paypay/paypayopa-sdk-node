@@ -25,8 +25,9 @@ class PayPayRestSDK {
 
   /**
    * Set authentication passed by end-user
-   * @param {string} clientId     API_KEY provided by end-user
-   * @param {string} clientSecret API_SECRET provided by end-user
+   * @param {string}  clientId      API_KEY provided by end-user
+   * @param {string}  clientSecret  API_SECRET provided by end-user
+   * @param {string}  merchantId    MERCHANT_ID provided by end-user
    */
   public configure = (clientConfig: { clientId: string; clientSecret: string; merchantId: string; productionMode: boolean;}) => {
     auth.setAuth(clientConfig.clientId, clientConfig.clientSecret, clientConfig.merchantId);
