@@ -1,5 +1,3 @@
-'use strict';
-
 /*
  * Handles authentication here.
  * If API exists to return error for client credentials, throw error,

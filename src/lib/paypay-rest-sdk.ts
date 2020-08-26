@@ -1,5 +1,3 @@
-'use strict';
-
 /*
  * Main file, methods that are exposed to end-user
  */
