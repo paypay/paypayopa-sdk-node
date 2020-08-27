@@ -176,7 +176,7 @@ class PayPayRestSDK {
    * @returns {Object}        Returns result containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public paymentAuthCapture(payload: Array<string | number>, callback: HttpsClientMessage): void {
+  public paymentAuthCapture(payload: any, callback: HttpsClientMessage): void {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'PAYMENT_AUTH_CAPTURE', payload), payload.toString(), (result: any) => {
       callback(result);
     });
@@ -190,7 +190,7 @@ class PayPayRestSDK {
    * @returns {Object}        Returns result containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public paymentAuthRevert(payload: Array<string | number>, callback: HttpsClientMessage): void {
+  public paymentAuthRevert(payload: any, callback: HttpsClientMessage): void {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'PAYMENT_AUTH_REVERT', payload), payload.toString(), (result: any) => {
       callback(result);
     });
