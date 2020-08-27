@@ -1,5 +1,3 @@
-'use strict';
-
 import * as https from 'https';
 
 class HttpsClient {

@@ -1,5 +1,3 @@
-'use strict';
-
 import * as stagingConfig from './conf.stage.json';
 import * as prodConfig from './conf.prod.json';
 

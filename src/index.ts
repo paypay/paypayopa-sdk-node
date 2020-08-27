@@ -1,5 +1,3 @@
-'use strict';
-
 import { payPayRestSDK } from './lib/paypay-rest-sdk';
 
 export = {
