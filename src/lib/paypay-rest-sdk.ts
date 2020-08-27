@@ -110,7 +110,7 @@ class PayPayRestSDK {
    * @returns {Object}        Returns result containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public qrCodeCreate(payload: any, callback: HttpsClientMessage): void {
+  public qrCodeCreate = (payload: any, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'QRCODE_CREATE', payload), payload, (result: any) => {
       callback(result);
     });
@@ -122,7 +122,7 @@ class PayPayRestSDK {
    * @returns {Object}            Returns result containing STATUS and BODY
    * @param {string} inputParams  Array of codeId : QR Code that is to be deleted
    */
-  public qrCodeDelete(inputParams: Array<string | number>, callback: HttpsClientMessage): void {
+  public qrCodeDelete = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'QRCODE_DELETE', inputParams), '', (result: any) => {
       callback(result);
     });
@@ -135,7 +135,7 @@ class PayPayRestSDK {
    * @returns {Object}            Returns result containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public getCodePaymentDetails(inputParams: Array<string | number>, callback: HttpsClientMessage): void {
+  public getCodePaymentDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'GET_CODE_PAYMENT_DETAILS', inputParams), '', (result: any) => {
       callback(result);
     });
@@ -148,7 +148,7 @@ class PayPayRestSDK {
    * @returns {Object}            Returns result containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public getPaymentDetails(inputParams: Array<string | number>, callback: HttpsClientMessage): void {
+  public getPaymentDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'GET_PAYMENT_DETAILS', inputParams), '', (result: any) => {
       callback(result);
     });
@@ -162,7 +162,7 @@ class PayPayRestSDK {
    * @returns {Object}            Returns result containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public paymentCancel(inputParams: Array<string | number>, callback: HttpsClientMessage): void {
+  public paymentCancel = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'CANCEL_PAYMENT', inputParams), '', (result: any) => {
       callback(result);
     });
@@ -176,7 +176,7 @@ class PayPayRestSDK {
    * @returns {Object}        Returns result containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public paymentAuthCapture(payload: any, callback: HttpsClientMessage): void {
+  public paymentAuthCapture = (payload: any, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'PAYMENT_AUTH_CAPTURE', payload), payload.toString(), (result: any) => {
       callback(result);
     });
@@ -190,7 +190,7 @@ class PayPayRestSDK {
    * @returns {Object}        Returns result containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public paymentAuthRevert(payload: any, callback: HttpsClientMessage): void {
+  public paymentAuthRevert = (payload: any, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'PAYMENT_AUTH_REVERT', payload), payload.toString(), (result: any) => {
       callback(result);
     });
@@ -203,7 +203,7 @@ class PayPayRestSDK {
    * @returns {Object}        Returns result containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public paymentRefund(payload: Array<string | number>, callback: HttpsClientMessage): void {
+  public paymentRefund = (payload: Array<string | number>, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'REFUND_PAYMENT', payload), payload.toString(), (result: any) => {
       callback(result);
     });
@@ -216,7 +216,7 @@ class PayPayRestSDK {
    * @returns {Object}            Returns result containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public getRefundDetails(inputParams: Array<string | number>, callback: HttpsClientMessage): void {
+  public getRefundDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'GET_REFUND_DETAILS', inputParams), '', (result: any) => {
       callback(result);
     });
@@ -230,7 +230,7 @@ class PayPayRestSDK {
    * @returns {Object}           Returns result containing STATUS and BODY
    * @param {Array} inputParams  Array of userAuthorizationId, amount, currency, productType
    */
-  public checkUserWalletBalance(inputParams: Array<string | number>, callback: HttpsClientMessage): void {
+  public checkUserWalletBalance = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_WALLET', 'CHECK_BALANCE', inputParams), '', (result: any) => {
       callback(result);
     });
@@ -243,7 +243,7 @@ class PayPayRestSDK {
    * @returns {Object}           Returns result containing STATUS and BODY
    * @param {Array} inputParams  Array of apiKey, jwtToken
    */
-  public authorization(inputParams: Array<string | number>, callback: HttpsClientMessage): void {
+  public authorization = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_DIRECT_DEBIT', 'AUTHORIZATION', inputParams), '', (result: any) => {
       callback(result);
     });
@@ -256,7 +256,7 @@ class PayPayRestSDK {
    * @returns {Object}           Returns result containing STATUS and BODY
    * @param {Array} inputParams  Array of apiKey, jwtToken
    */
-  public authorizationResult(inputParams: Array<string | number>, callback: HttpsClientMessage): void {
+  public authorizationResult = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_DIRECT_DEBIT', 'AUTHORIZATION_RESULT', inputParams), '', (result: any) => {
       callback(result);
     });
@@ -280,7 +280,7 @@ class PayPayRestSDK {
    * @param {Object} token           The token to be verified
    * @param {Object} clientSecret    The client secret to be used for verification
    */
-  public validateJWT(token: string, clientSecret: string): string | object {
+  public validateJWT = (token: string, clientSecret: string): string | object => {
       return jwt.verify(token, Buffer.from(clientSecret, 'base64'));
   }
 
