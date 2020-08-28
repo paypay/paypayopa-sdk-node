@@ -203,7 +203,7 @@ class PayPayRestSDK {
    * @returns {Object}        Returns result containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public paymentRefund = (payload: Array<string | number>, callback: HttpsClientMessage) => {
+  public paymentRefund = (payload: any, callback: HttpsClientMessage) => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'REFUND_PAYMENT', payload), payload.toString(), (result: any) => {
       callback(result);
     });
