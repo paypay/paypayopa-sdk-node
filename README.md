@@ -6,6 +6,7 @@
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/paypay/paypayopa-sdk-node.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/paypay/paypayopa-sdk-node/context:javascript)
 [![Maintainability](https://api.codeclimate.com/v1/badges/e3cf7a7e9153531b0f48/maintainability)](https://codeclimate.com/github/paypay/paypayopa-sdk-node/maintainability)
 [![Black Duck Security Risk](https://copilot.blackducksoftware.com/github/repos/paypay/paypayopa-sdk-node/branches/master/badge-risk.svg)](https://copilot.blackducksoftware.com/github/repos/paypay/paypayopa-sdk-node/branches/master)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fpaypay%2Fpaypayopa-sdk-node.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fpaypay%2Fpaypayopa-sdk-node?ref=badge_shield)
 
 So you are a developer and want to start accepting payments using PayPay. PayPay's Payment SDK is the simplest way to achieve the integration. With PayPay's Payment SDK, you can build a custom Payment checkout process to suit your unique business needs and branding guidelines.
 
@@ -33,3 +34,7 @@ Once you have understood the payment flow, before we start the integration make 
 ```sh
 $ npm i @paypayopa/paypayopa-sdk-node
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fpaypay%2Fpaypayopa-sdk-node.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fpaypay%2Fpaypayopa-sdk-node?ref=badge_large)
