@@ -16,7 +16,7 @@
     "clean": "rm -rf ./.nyc_output ./node_modules/.cache ./coverage",
     "lint": "eslint --ext .js,.jsx,.ts .",
     "report": "nyc -r text -r lcov report",
-    "coveralls": "cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "keywords": [
     "PayPay",

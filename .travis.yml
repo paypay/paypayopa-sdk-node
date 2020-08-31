@@ -17,6 +17,6 @@ node_js:
   - '12'
   - '10'
 after_success: 
- - yarn report && yarn coveralls
+ - yarn coveralls
  - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
