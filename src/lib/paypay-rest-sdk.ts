@@ -84,22 +84,24 @@ class PayPayRestSDK {
     this.options.path = this.config.getHttpsPath(nameApi, nameMethod);
     this.options.method = this.config.getHttpsMethod(nameApi, nameMethod);
 
-    const authHeader = this.createAuthHeader(this.options.method,
-                                              this.options.path,
-                                              input,
-                                              auth);
-    this.setHttpsOptions(authHeader);
-
-    if (this.options.method === 'POST') {
-      this.options.headers['Content-Type'] = 'application/json';
-      this.options.headers['Content-Length'] = Buffer.byteLength(JSON.stringify(input));
-    } else {
+    if (this.options.method === 'GET') {
       queryParams = this.options.path.match(/{\w+}/g);
       if (queryParams) {
         queryParams.forEach((q: any, n: string | number) => {
           this.options.path = this.options.path.replace(q, input[n]);
         });
       }
+    }
+
+    const authHeader = this.createAuthHeader(this.options.method,
+                                              this.options.path,
+                                              this.options.method === 'GET' ? null : input,
+                                              auth);
+    this.setHttpsOptions(authHeader);
+
+    if (this.options.method === 'POST') {
+      this.options.headers['Content-Type'] = 'application/json';
+      this.options.headers['Content-Length'] = Buffer.byteLength(JSON.stringify(input));
     }
     return this.options;
   }
