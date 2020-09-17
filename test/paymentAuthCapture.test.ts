@@ -110,6 +110,7 @@ test('Unit Test - Payment Auth Capture', async () => {
     });
 
     expect(mockHttpsCall).toHaveBeenCalledTimes(1);
+    expect(mockHttpsCall).toHaveBeenCalledWith(expect.anything(), payload, expect.anything());
 
     mockHttpsCall.mockClear();
 });

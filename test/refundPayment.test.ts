@@ -53,6 +53,7 @@ test('Unit Test - Refund Payment', async () => {
     });
 
     expect(mockHttpsCall).toHaveBeenCalledTimes(1);
+    expect(mockHttpsCall).toHaveBeenCalledWith(expect.anything(), payload, expect.anything());
 
     mockHttpsCall.mockClear();
 });
