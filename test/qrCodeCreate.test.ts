@@ -74,6 +74,7 @@ test('Unit Test - Create QR code', async () => {
     });
 
     expect(mockHttpsCall).toHaveBeenCalledTimes(1);
+    expect(mockHttpsCall).toHaveBeenCalledWith(expect.anything(), payload, expect.anything());
 
     mockHttpsCall.mockClear();
 });

@@ -179,7 +179,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public paymentAuthCapture = (payload: any, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'PAYMENT_AUTH_CAPTURE', payload), payload.toString(), (result: any) => {
+    httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'PAYMENT_AUTH_CAPTURE', payload), payload, (result: any) => {
       callback(result);
     });
   }
@@ -193,7 +193,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public paymentAuthRevert = (payload: any, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'PAYMENT_AUTH_REVERT', payload), payload.toString(), (result: any) => {
+    httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'PAYMENT_AUTH_REVERT', payload), payload, (result: any) => {
       callback(result);
     });
   }
@@ -206,7 +206,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public paymentRefund = (payload: any, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'REFUND_PAYMENT', payload), payload.toString(), (result: any) => {
+    httpsClient.httpsCall(this.paypaySetupOptions('API_PAYMENT', 'REFUND_PAYMENT', payload), payload, (result: any) => {
       callback(result);
     });
   }
