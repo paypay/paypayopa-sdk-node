@@ -20,6 +20,6 @@ export = {
   CreateSubscriptionPayment: payPayRestSDK.paymentSubscription,
   CreatePendingPayment: payPayRestSDK.createPendingPayment,
   GetPendingOrderDetails: payPayRestSDK.getPendingOrderDetails,
-  CancelPendingOrdert: payPayRestSDK.cancelPendingOrder,
+  CancelPendingOrder: payPayRestSDK.cancelPendingOrder,
   RefundPendingPayment: payPayRestSDK.refundPendingPayment,
 };

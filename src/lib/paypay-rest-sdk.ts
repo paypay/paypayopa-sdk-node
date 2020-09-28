@@ -90,7 +90,7 @@ class PayPayRestSDK {
     this.options.path = this.config.getHttpsPath(nameApi, nameMethod);
     this.options.method = this.config.getHttpsMethod(nameApi, nameMethod);
 
-    if (this.options.method === 'GET') {
+    if (this.options.method === 'GET' || this.options.method === 'DELETE') {
       queryParams = this.options.path.match(/{\w+}/g);
       if (queryParams) {
         queryParams.forEach((q: any, n: string | number) => {
@@ -101,7 +101,7 @@ class PayPayRestSDK {
 
     const authHeader = this.createAuthHeader(this.options.method,
       this.options.path,
-      this.options.method === 'GET' ? null : input,
+      this.options.method === 'GET' || this.options.method === 'DELETE' ? null : input,
       auth);
     this.setHttpsOptions(authHeader);
 
