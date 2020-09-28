@@ -7,7 +7,7 @@
 class Auth {
   clientId: string;
   clientSecret: string;
-  merchantId: string;
+  merchantId?: string;
   /**
    * Set intial values to empty string
    */
@@ -25,8 +25,7 @@ class Auth {
   setAuth(clientId: string, clientSecret: string, merchantId?: string) {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
-    if(merchantId!=undefined)
-      this.merchantId = merchantId;
+    this.merchantId = merchantId;
   }
 }
 
