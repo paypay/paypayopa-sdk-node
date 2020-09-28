@@ -67,12 +67,18 @@ class PayPayRestSDK {
   }
 
   private setHttpsOptions(header: string) {
+    let isempty : any = [undefined, null, "", 'undefined', 'null'];
     this.options.hostname = this.config.getHostname(),
     this.options.port = this.config.getPortNumber(),
     this.options.headers = {
         "Authorization": header,
         "X-ASSUME-MERCHANT": auth.merchantId,
       };
+    if(isempty.includes(auth.merchantId)){
+      this.options.headers = {
+        "Authorization": header,
+      };
+    }
    this.config.setHttpsOptions(this.options);
   }
 
