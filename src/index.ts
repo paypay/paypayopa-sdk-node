@@ -19,7 +19,7 @@ export = {
   ValidateJWT: payPayRestSDK.validateJWT,
   CreateSubscriptionPayment: payPayRestSDK.paymentSubscription,
   CreatePendingPayment: payPayRestSDK.createPendingPayment,
-  GetPendingOrderDetails: payPayRestSDK.getPendingOrderDetails,
+  GetPendingPaymentDetails: payPayRestSDK.getPendingPaymentDetails,
   CancelPendingOrder: payPayRestSDK.cancelPendingOrder,
   RefundPendingPayment: payPayRestSDK.refundPendingPayment,
 };

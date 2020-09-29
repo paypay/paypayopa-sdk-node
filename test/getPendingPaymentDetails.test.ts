@@ -53,7 +53,7 @@ test('Unit Test - Get Pending Order Details', async () => {
         _callback(response);
     }));
 
-    await payPayRestSDK.getPendingOrderDetails(merchantPaymentId, (result: any) => {
+    await payPayRestSDK.getPendingPaymentDetails(merchantPaymentId, (result: any) => {
         expect(result).toEqual(response);
     });
 

@@ -27,7 +27,7 @@ class PayPayRestSDK {
    * @param {string}  clientSecret  API_SECRET provided by end-user
    * @param {string}  merchantId    MERCHANT_ID provided by end-user
    */
-  public configure = (clientConfig: { clientId: string; clientSecret: string; merchantId: string; productionMode: boolean; }) => {
+  public configure = (clientConfig: { clientId: string; clientSecret: string; merchantId?: string; productionMode: boolean; }) => {
     auth.setAuth(clientConfig.clientId, clientConfig.clientSecret, clientConfig.merchantId);
     if (clientConfig.productionMode) {
       this.productionMode = clientConfig.productionMode
@@ -326,7 +326,7 @@ class PayPayRestSDK {
    * @returns {Object}            Returns result containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public getPendingOrderDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
+  public getPendingPaymentDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
     httpsClient.httpsCall(this.paypaySetupOptions('API_REQUEST_ORDER', 'GET_ORDER_DETAILS', inputParams), '', (result: any) => {
       callback(result);
     })
