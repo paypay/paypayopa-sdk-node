@@ -13,60 +13,49 @@ payPayRestSDK.configure(conf);
 test('Unit Test - Create Pending Payment', async () => {
 
     const payload = {
-        merchantPaymentId: "string",
-        userAuthorizationId: "string",
+        merchantPaymentId: "343423",
+        userAuthorizationId: "24234242424",
         amount: {
-            amount: 0,
+            amount: 10.00,
             currency: "JPY"
         },
-        requestedAt: 0,
-        expiryDate: null,
-        storeId: "string",
-        terminalId: "string",
-        orderReceiptNumber: "string",
-        orderDescription: "string",
+        requestedAt: 2343432423,
         orderItems: [
             {
-                name: "string",
-                category: "string",
+                name: "Test Item1",
+                category: "Test Category1",
                 quantity: 1,
-                productId: "string",
+                productId: "14214214",
                 unitPrice: {
-                    amount: 0,
+                    amount: 10.00,
                     currency: "JPY"
                 }
             }
-        ],
-        metadata: {}
+        ]
     }
 
     const response = {
         "resultInfo": {
-            "code": "string",
-            "message": "string",
-            "codeId": "string"
+            "code": "SUCCESS",
+            "message": "Success",
+            "codeId": "08100001"
         },
         "data": {
-            "merchantPaymentId": "string",
-            "userAuthorizationId": "string",
+            "merchantPaymentId": "343423",
+            "userAuthorizationId": "24234242424",
             "amount": {
-                "amount": 0,
+                "amount": 10.00,
                 "currency": "JPY"
             },
-            "requestedAt": 0,
-            "expiryDate": null,
-            "storeId": "string",
-            "terminalId": "string",
-            "orderReceiptNumber": "string",
-            "orderDescription": "string",
+            "requestedAt": 2343432423,
             "orderItems": [
                 {
-                    "name": "string",
-                    "category": "string",
+                    "name": "Test Item1",
+                    "category": "Test Category1",
                     "quantity": 1,
-                    "productId": "string",
+                    "productId": "14214214",
                     "unitPrice": {
-                        "amount": 0,
+                        "amount": 10.00,
                         "currency": "JPY"
                     }
                 }

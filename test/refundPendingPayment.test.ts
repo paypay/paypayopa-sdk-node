@@ -25,21 +25,21 @@ test('Unit Test - Refund Pending Payment', async () => {
 
     const response = {
         "resultInfo": {
-            "code": "string",
-            "message": "string",
-            "codeId": "string"
+            "code": "SUCCESS",
+            "message": "Success",
+            "codeId": "08100001"
         },
         "data": {
             "status": "CREATED",
-            "acceptedAt": 0,
-            "merchantRefundId": "string",
-            "paymentId": "string",
+            "acceptedAt": 53464645645,
+            "merchantRefundId": "343432432",
+            "paymentId": "454354354",
             "amount": {
-                "amount": 0,
+                "amount": 10.00,
                 "currency": "JPY"
             },
-            "requestedAt": 0,
-            "reason": "string"
+            "requestedAt": 2343534535,
+            "reason": "Test Reason"
         }
     };
 

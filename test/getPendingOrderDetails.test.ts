@@ -16,37 +16,35 @@ test('Unit Test - Get Pending Order Details', async () => {
 
     const response = {
         "resultInfo": {
-            "code": "string",
-            "message": "string",
-            "codeId": "string"
+            "code": "SUCCESS",
+            "message": "Success",
+            "codeId": "08100001"
         },
         "data": {
-            "paymentId": "string",
+            "paymentId": "3243423",
             "status": "CREATED",
-            "acceptedAt": 0,
+            "acceptedAt": 4234423,
             "refunds": {},
-            "merchantPaymentId": "string",
-            "userAuthorizationId": "string",
+            "merchantPaymentId": "342343",
+            "userAuthorizationId": "53453535",
             "amount": {},
-            "requestedAt": 0,
-            "expiryDate": null,
-            "storeId": "string",
-            "terminalId": "string",
-            "orderReceiptNumber": "string",
-            "orderDescription": "string",
+            "requestedAt": 535353534,
+            "storeId": "34543534",
+            "terminalId": "353534",
+            "orderReceiptNumber": "546546456",
+            "orderDescription": "Test Description1",
             "orderItems": [
                 {
-                    "name": "string",
-                    "category": "string",
+                    "name": "Test Product1",
+                    "category": "Test Category1",
                     "quantity": 1,
-                    "productId": "string",
+                    "productId": "3434324",
                     "unitPrice": {
-                        "amount": 0,
+                        "amount": 10,
                         "currency": "JPY"
                     }
                 }
             ],
-            "metadata": {}
         }
     };
 

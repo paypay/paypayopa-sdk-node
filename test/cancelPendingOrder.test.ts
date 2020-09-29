@@ -16,9 +16,9 @@ test('Unit Test - Cancel Pending Order', async () => {
 
     const response = {
         "resultInfo": {
-            "code": "string",
-            "message": "string",
-            "codeId": "string"
+            "code": "SUCCESS",
+            "message": "Success",
+            "codeId": "08100001"
         }
     };
 

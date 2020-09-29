@@ -97,6 +97,8 @@ class PayPayRestSDK {
           this.options.path = this.options.path.replace(q, input[n]);
         });
       }
+    } else if (this.options.method === 'POST') {
+      input.requestedAt = Math.round(new Date().getTime() / 1000);
     }
 
     const authHeader = this.createAuthHeader(this.options.method,
