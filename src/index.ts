@@ -18,4 +18,8 @@ export = {
   AccountLinkQRCodeCreate: payPayRestSDK.accountLinkQRCodeCreate,
   ValidateJWT: payPayRestSDK.validateJWT,
   CreateSubscriptionPayment: payPayRestSDK.paymentSubscription,
+  CreatePendingPayment: payPayRestSDK.createPendingPayment,
+  GetPendingPaymentDetails: payPayRestSDK.getPendingPaymentDetails,
+  CancelPendingOrder: payPayRestSDK.cancelPendingOrder,
+  RefundPendingPayment: payPayRestSDK.refundPendingPayment,
 };

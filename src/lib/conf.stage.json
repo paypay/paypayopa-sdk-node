@@ -71,5 +71,23 @@
       "METHOD": "POST",
       "PATH": "/v1/subscription/payments"
     }
-  } 
+  },
+  "API_REQUEST_ORDER": {
+    "PENDING_PAYMENT_CREATE": {
+      "METHOD": "POST",
+      "PATH": "/v1/requestOrder"
+    },
+    "GET_ORDER_DETAILS": {
+      "METHOD": "GET",
+      "PATH": "/v1/requestOrder/{merchantPaymentId}"
+    },
+    "PENDING_ORDER_CANCEL": {
+      "METHOD": "DELETE",
+      "PATH": "/v1/requestOrder/{merchantPaymentId}"
+    },
+    "PAYMENT_REFUND": {
+      "METHOD": "POST",
+      "PATH": "/v1/requestOrder/refunds"
+    }         
+  }
 }
