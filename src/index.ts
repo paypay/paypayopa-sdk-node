@@ -1,4 +1,4 @@
-import { payPayRestSDK } from './lib/paypay-rest-sdk';
+import { payPayRestSDK } from "./lib/paypay-rest-sdk";
 
 export = {
   Configure: payPayRestSDK.configure,

@@ -1,5 +1,5 @@
-import * as stagingConfig from './conf.stage.json';
-import * as prodConfig from './conf.prod.json';
+import * as stagingConfig from "./conf.stage.json";
+import * as prodConfig from "./conf.prod.json";
 
 export interface Config {
   HOST_NAME: string;

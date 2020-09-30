@@ -31,7 +31,7 @@
     ],
     "esModuleInterop": true,
     "preserveSymlinks": true,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "./src/index.ts",

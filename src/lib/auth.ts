@@ -12,9 +12,9 @@ class Auth {
    * Set intial values to empty string
    */
   constructor() {
-    this.clientId = '';
-    this.clientSecret = '';
-    this.merchantId = '';
+    this.clientId = "";
+    this.clientSecret = "";
+    this.merchantId = "";
   }
 
   /**
