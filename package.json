@@ -13,7 +13,7 @@
     "build": "tsc",
     "prepublishOnly": "npm run build",
     "test": "jest",
-    "coverage": "jest --coverage",    
+    "coverage": "jest --coverage",
     "clean": "rm -rf ./.nyc_output ./node_modules/.cache ./coverage",
     "lint": "eslint --ext .js,.jsx,.ts .",
     "report": "nyc -r text -r lcov report",
