@@ -12,6 +12,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=paypay_paypayopa-sdk-node&metric=alert_status)](https://sonarcloud.io/dashboard?id=paypay_paypayopa-sdk-node)
 [![npm](https://img.shields.io/npm/dm/@paypayopa/paypayopa-sdk-node)](https://www.npmjs.com/package/@paypayopa/paypayopa-sdk-node)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b17690606bb64c51a1c65c65a8a75b1f)](https://app.codacy.com/gh/paypay/paypayopa-sdk-node?utm_source=github.com&utm_medium=referral&utm_content=paypay/paypayopa-sdk-node&utm_campaign=Badge_Grade_Settings)
+[![BCH compliance](https://bettercodehub.com/edge/badge/paypay/paypayopa-sdk-node?branch=master)](https://bettercodehub.com/)
 
 So you are a developer and want to start accepting payments using PayPay. PayPay's Payment SDK is the simplest way to achieve the integration. With PayPay's Payment SDK, you can build a custom Payment checkout process to suit your unique business needs and branding guidelines.
 
