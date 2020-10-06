@@ -55,7 +55,7 @@ class PayPayRestSDK {
       payload = md5
         .finalize()
         .toString(CryptoJS.enc.Base64)
-        .toString("utf-8");
+        .toString();
     }
     const signatureRawList = [resourceUrl, method, nonce, epoch, contentType, payload];
     const signatureRawData = signatureRawList.join("\n");

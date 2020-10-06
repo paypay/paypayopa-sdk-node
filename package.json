@@ -36,7 +36,7 @@
     "npm": ">=5.0.0"
   },
   "devDependencies": {
-    "@types/crypto-js": "^3.1.47",
+    "@types/crypto-js": "^4.0.0",
     "@types/jest": "^26.0.10",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.6.0",
