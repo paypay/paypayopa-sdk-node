@@ -7,6 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Set version variable
+      id: vars
+      run: echo ::set-env name=RELEASE_VERSION::${GITHUB_REF#refs/*/}
+    - name: Update version
+      run: |
+        echo "RELEASE_VERSION=$RELEASE_VERSION"
+        q
     # Setup .npmrc file to publish to npm
     - uses: actions/setup-node@v1
       with:
