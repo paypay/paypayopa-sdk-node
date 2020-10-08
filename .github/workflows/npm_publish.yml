@@ -13,7 +13,7 @@ jobs:
     - name: Update version
       run: |
         echo "RELEASE_VERSION=$RELEASE_VERSION"
-        q
+        sed -i -E "s/\\\"version\\\": \\\"auto\\\",/\\\"version\\\": \\\"$RELEASE_VERSION\\\",/g" ./package.json
     # Setup .npmrc file to publish to npm
     - uses: actions/setup-node@v1
       with:
