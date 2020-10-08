@@ -1,7 +1,7 @@
 {
   "author": "PayPay OPA SDK",
   "name": "@paypayopa/paypayopa-sdk-node",
-  "version": "auto",
+  "version": "0.0.0",
   "description": "Node.js SDK for PayPay APIs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
