@@ -22,4 +22,6 @@ export = {
   GetPendingPaymentDetails: payPayRestSDK.getPendingPaymentDetails,
   CancelPendingOrder: payPayRestSDK.cancelPendingOrder,
   RefundPendingPayment: payPayRestSDK.refundPendingPayment,
+  GetUserAuthorizationStatus: payPayRestSDK.getUserAuthorizationStatus,
+  UnlinkUser: payPayRestSDK.unlinkUser,  
 };

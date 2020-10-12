@@ -357,6 +357,32 @@ class PayPayRestSDK {
       callback(result);
     })
   }
+ 
+  /**
+   * Get user authorization status
+   *
+   * @callback                    Callback function to handle result
+   * @returns {Object}            Returns result containing STATUS and BODY
+   * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
+   */
+  public getUserAuthorizationStatus = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
+    httpsClient.httpsCall(this.paypaySetupOptions('USER_AUTHORIZATION', 'GET_USER_AUTHORIZATION_STATUS', inputParams), '', (result: any) => {
+      callback(result);
+    })
+  }  
+
+  /**
+   * Unlink user
+   *
+   * @callback                    Callback function to handle result
+   * @returns {Object}            Returns result containing STATUS and BODY
+   * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
+   */
+  public unlinkUser = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
+    httpsClient.httpsCall(this.paypaySetupOptions('USER_AUTHORIZATION', 'UNLINK_USER', inputParams), '', (result: any) => {
+      callback(result);
+    })
+  }  
 }
 
 /**
