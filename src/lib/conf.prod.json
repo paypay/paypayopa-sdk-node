@@ -93,7 +93,7 @@
   "USER_AUTHORIZATION": {
     "GET_USER_AUTHORIZATION_STATUS": {
       "METHOD": "GET",
-      "PATH": "/v2/user/authorizations/{userAuthorizationId}"
+      "PATH": "/v2/user/authorizations?userAuthorizationId={userAuthorizationId}"
     },
     "UNLINK_USER": {
       "METHOD": "DELETE",
