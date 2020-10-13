@@ -98,7 +98,7 @@ class PayPayRestSDK {
           this.options.path = this.options.path.replace(q, input[n]);
         });
       }
-    } else if (this.options.method === 'POST') {
+    } else if (this.options.method === "POST") {
       input.requestedAt = Math.round(new Date().getTime() / 1000);
     }
 
@@ -315,7 +315,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public createPendingPayment = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions('API_REQUEST_ORDER', 'PENDING_PAYMENT_CREATE', payload), payload, (result: any) => {
+    httpsClient.httpsCall(this.paypaySetupOptions("API_REQUEST_ORDER", "PENDING_PAYMENT_CREATE", payload), payload, (result: any) => {
       callback(result);
     })
   }
@@ -328,7 +328,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public getPendingPaymentDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions('API_REQUEST_ORDER', 'GET_ORDER_DETAILS', inputParams), '', (result: any) => {
+    httpsClient.httpsCall(this.paypaySetupOptions("API_REQUEST_ORDER", "GET_ORDER_DETAILS", inputParams), "", (result: any) => {
       callback(result);
     })
   }
@@ -341,7 +341,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public cancelPendingOrder = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions('API_REQUEST_ORDER', 'PENDING_ORDER_CANCEL', inputParams), '', (result: any) => {
+    httpsClient.httpsCall(this.paypaySetupOptions("API_REQUEST_ORDER", "PENDING_ORDER_CANCEL", inputParams), "", (result: any) => {
       callback(result);
     })
   }
@@ -354,7 +354,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public refundPendingPayment = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions('API_REQUEST_ORDER', 'PAYMENT_REFUND', payload), payload, (result: any) => {
+    httpsClient.httpsCall(this.paypaySetupOptions("API_REQUEST_ORDER", "PAYMENT_REFUND", payload), payload, (result: any) => {
       callback(result);
     })
   }
@@ -367,7 +367,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    */
   public getUserAuthorizationStatus = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions('USER_AUTHORIZATION', 'GET_USER_AUTHORIZATION_STATUS', inputParams), '', (result: any) => {
+    httpsClient.httpsCall(this.paypaySetupOptions("USER_AUTHORIZATION", "GET_USER_AUTHORIZATION_STATUS", inputParams), "", (result: any) => {
       callback(result);
     })
   }  
@@ -380,7 +380,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    */
   public unlinkUser = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions('USER_AUTHORIZATION', 'UNLINK_USER', inputParams), '', (result: any) => {
+    httpsClient.httpsCall(this.paypaySetupOptions("USER_AUTHORIZATION", "UNLINK_USER", inputParams), "", (result: any) => {
       callback(result);
     })
   }  
