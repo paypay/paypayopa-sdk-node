@@ -89,8 +89,7 @@ class PayPayRestSDK {
 
     this.options.path = this.config.getHttpsPath(nameApi, nameMethod);
     this.options.method = this.config.getHttpsMethod(nameApi, nameMethod);
-    let cleanPath = this.options.path.split("?")[0];
-
+    
     if (this.options.method === "GET" || this.options.method === "DELETE") {
       queryParams = this.options.path.match(/{\w+}/g);
       if (queryParams) {
@@ -102,6 +101,7 @@ class PayPayRestSDK {
       input.requestedAt = Math.round(new Date().getTime() / 1000);
     }
 
+    let cleanPath = this.options.path.split("?")[0];
     const authHeader = this.createAuthHeader(this.options.method,
       cleanPath,
       this.options.method === "GET" || this.options.method === "DELETE" ? null : input,
