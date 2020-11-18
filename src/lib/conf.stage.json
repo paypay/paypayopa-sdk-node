@@ -24,7 +24,7 @@
     "CANCEL_PAYMENT": {
       "METHOD": "DELETE",
       "PATH": "/v2/payments/{merchantPaymentId}",
-      "API_NAME": ""
+      "API_NAME": "v2_cancelPayment"
     },
     "PAYMENT_AUTH_CAPTURE": {
       "METHOD": "POST",
