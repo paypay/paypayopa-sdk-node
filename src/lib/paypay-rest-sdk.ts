@@ -4,9 +4,9 @@
 import { auth } from "./auth";
 import { Conf } from "./conf";
 import { httpsClient } from "./httpsClient";
-import CryptoJS from "crypto-js";
+import { HmacSHA256, enc, algo } from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 
 export interface HttpsClientMessage {
   (message: string): void;
@@ -49,18 +49,18 @@ class PayPayRestSDK {
       contentType = "empty";
       payload = "empty";
     } else {
-      let md5 = CryptoJS.algo.MD5.create();
+      let md5 = algo.MD5.create();
       md5.update(contentType);
       md5.update(payload);
       payload = md5
         .finalize()
-        .toString(CryptoJS.enc.Base64)
+        .toString(enc.Base64)
         .toString();
     }
     const signatureRawList = [resourceUrl, method, nonce, epoch, contentType, payload];
     const signatureRawData = signatureRawList.join("\n");
-    const hashed = CryptoJS.HmacSHA256(signatureRawData, auth.clientSecret);
-    const hashed64 = CryptoJS.enc.Base64.stringify(hashed);
+    const hashed = HmacSHA256(signatureRawData, auth.clientSecret);
+    const hashed64 = enc.Base64.stringify(hashed);
     const headList = [auth.clientId, hashed64, nonce, epoch, payload];
     const header = headList.join(":");
     return `hmac OPA-Auth:${header}`;
@@ -89,6 +89,7 @@ class PayPayRestSDK {
 
     this.options.path = this.config.getHttpsPath(nameApi, nameMethod);
     this.options.method = this.config.getHttpsMethod(nameApi, nameMethod);
+    this.options.apiKey = this.config.getApiKey(nameApi, nameMethod);
     
     if (this.options.method === "GET" || this.options.method === "DELETE") {
       queryParams = this.options.path.match(/{\w+}/g);

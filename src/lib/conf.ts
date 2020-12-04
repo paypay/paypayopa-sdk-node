@@ -45,6 +45,10 @@ export class Conf {
     return this.configLookup[nameApi][nameMethod].PATH;
   }
 
+  getApiKey(nameApi: string | number, nameMethod: string | number) {
+    return this.configLookup[nameApi][nameMethod].API_NAME;
+  }
+
   getHostname() {
     return this.configLookup.HOST_NAME;
   }

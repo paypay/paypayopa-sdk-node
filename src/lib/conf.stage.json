@@ -3,43 +3,53 @@
   "API_PAYMENT": {
     "QRCODE_CREATE": {
       "METHOD": "POST",
-      "PATH": "/v2/codes"
+      "PATH": "/v2/codes",
+      "API_NAME": "v2_createDynamicQRCode"
     },
     "QRCODE_DELETE": {
       "METHOD": "DELETE",
-      "PATH": "/v2/codes/{codeId}"
+      "PATH": "/v2/codes/{codeId}",
+      "API_NAME": "v2_deleteDynamicQRCode"
     },
     "GET_CODE_PAYMENT_DETAILS": {
       "METHOD": "GET",
-      "PATH": "/v2/codes/payments/{merchantPaymentId}"
+      "PATH": "/v2/codes/payments/{merchantPaymentId}",
+      "API_NAME": "v2_getQRPaymentDetails"
     },
     "GET_PAYMENT_DETAILS": {
       "METHOD": "GET",
-      "PATH": "/v2/payments/{merchantPaymentId}"
+      "PATH": "/v2/payments/{merchantPaymentId}",
+      "API_NAME": "v2_getPaymentDetail"
     },
     "CANCEL_PAYMENT": {
       "METHOD": "DELETE",
-      "PATH": "/v2/payments/{merchantPaymentId}"
+      "PATH": "/v2/payments/{merchantPaymentId}",
+      "API_NAME": "v2_cancelPayment"
     },
     "PAYMENT_AUTH_CAPTURE": {
       "METHOD": "POST",
-      "PATH": "/v2/payments/capture"
+      "PATH": "/v2/payments/capture",
+      "API_NAME": "v2_captureAuthorizedOrder"
     },
     "PAYMENT_AUTH_REVERT": {
       "METHOD": "POST",
-      "PATH": "/v2/payments/preauthorize/revert"
+      "PATH": "/v2/payments/preauthorize/revert",
+      "API_NAME": "v2_revertAuthorizedOrder"
     },
     "PREAUTHORIZE": {
       "METHOD": "POST",
-      "PATH": "/v2/payments/preauthorize"
-    },    
+      "PATH": "/v2/payments/preauthorize",
+      "API_NAME": "v2_createOrderAndAuthorize"
+    },
     "REFUND_PAYMENT": {
       "METHOD": "POST",
-      "PATH": "/v2/refunds"
+      "PATH": "/v2/refunds",
+      "API_NAME": "v2_createRefundPayment"
     },
     "GET_REFUND_DETAILS": {
       "METHOD": "GET",
-      "PATH": "/v2/refunds/{merchantRefundId}"
+      "PATH": "/v2/refunds/{merchantRefundId}",
+      "API_NAME": "v2_getRefundDetails"
     }
   },
   "API_WALLET": {
@@ -63,41 +73,49 @@
   "API_ACCOUNT_LINK": {
     "QRCODE_CREATE": {
       "METHOD": "POST",
-      "PATH": "/v1/qr/sessions"
+      "PATH": "/v1/qr/sessions",
+      "API_NAME": "v1_qrSession"
     }
   },
   "API_SUBSCRIPTION": {
     "PAYMENTS": {
       "METHOD": "POST",
-      "PATH": "/v1/subscription/payments"
+      "PATH": "/v1/subscription/payments",
+      "API_NAME": "v1_createSubscriptionPayment"
     }
   },
   "API_REQUEST_ORDER": {
     "PENDING_PAYMENT_CREATE": {
       "METHOD": "POST",
-      "PATH": "/v1/requestOrder"
+      "PATH": "/v1/requestOrder",
+      "API_NAME": "v1_createRequestOrder"
     },
     "GET_ORDER_DETAILS": {
       "METHOD": "GET",
-      "PATH": "/v1/requestOrder/{merchantPaymentId}"
+      "PATH": "/v1/requestOrder/{merchantPaymentId}",
+      "API_NAME": "v1_getRequestOrder"
     },
     "PENDING_ORDER_CANCEL": {
       "METHOD": "DELETE",
-      "PATH": "/v1/requestOrder/{merchantPaymentId}"
+      "PATH": "/v1/requestOrder/{merchantPaymentId}",
+      "API_NAME": "v1_cancelRequestOrder"
     },
     "PAYMENT_REFUND": {
       "METHOD": "POST",
-      "PATH": "/v1/requestOrder/refunds"
-    }         
+      "PATH": "/v1/requestOrder/refunds",
+      "API_NAME": "v1_createRequestOrderRefund"
+    }
   },
   "USER_AUTHORIZATION": {
     "GET_USER_AUTHORIZATION_STATUS": {
       "METHOD": "GET",
-      "PATH": "/v2/user/authorizations?userAuthorizationId={userAuthorizationId}"
+      "PATH": "/v2/user/authorizations?userAuthorizationId={userAuthorizationId}",
+      "API_NAME": "v2_userAuthStatus"
     },
     "UNLINK_USER": {
       "METHOD": "DELETE",
-      "PATH": "/v2/user/authorizations/{userAuthorizationId}"
+      "PATH": "/v2/user/authorizations/{userAuthorizationId}",
+      "API_NAME": "v2_unlinkUser"
     }
-  }  
+  }
 }

@@ -5,14 +5,23 @@ class HttpsClient {
 
   httpsCall(options: any, payload = "", callback: any) {
     let body = "";
-    let status = "";
+    let status: number;
+    const apiName = options.apiKey;
+    delete options.apiKey; // Delete key to avoid any potential errors
     const req = https.request(options, (res) => {
-      let status = res.statusCode;
+      status = res?.statusCode!;
       res.setEncoding("utf8");
       res.on("data", (chunk) => {
         body += Buffer.from(chunk);
       });
       res.on("end", () => {
+        if (status < 200  || status > 299 ) {
+          const parseBody =  JSON.parse(body);
+          const code = parseBody.resultInfo.code;
+          const codeId = parseBody.resultInfo.codeId;
+          const RESOLVE_URL = `https://developer.paypay.ne.jp/develop/resolve?api_name=${apiName}&code=${code}&code_id=${codeId}`;
+          console.log(`This link should help you to troubleshoot the error: ${RESOLVE_URL}`);
+        }
         callback({ STATUS: status, BODY: body });
       });
     });
