@@ -15,7 +15,5 @@ jobs:
     - run: npm install
     - run: npm run build --if-present
     - run: npm test
-
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
+    - run: yarn coveralls
 
