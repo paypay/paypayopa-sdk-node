@@ -17,8 +17,8 @@ jobs:
     - run: npm test
     
     - name: Coveralls
-        env:
+        with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          coveralls
+            coveralls
 
