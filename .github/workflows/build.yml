@@ -23,4 +23,6 @@ jobs:
            ./cc-test-reporter before-build
     
     - name: After success
-      run: yarn coveralls
+      run: |
+           yarn coveralls
+           bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
