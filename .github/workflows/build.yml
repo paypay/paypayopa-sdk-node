@@ -23,6 +23,6 @@ jobs:
            ./cc-test-reporter before-build
     
     - name: After success
-      run: |
-           yarn coveralls
-           bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
