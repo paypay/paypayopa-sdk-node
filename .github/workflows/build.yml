@@ -15,6 +15,7 @@ jobs:
     - run: npm install
     - run: npm run build --if-present
     - run: npm test
+    - run: make test-coverage
 
     - name: Before script
       run: |
