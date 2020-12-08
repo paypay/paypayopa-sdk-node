@@ -12,6 +12,11 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: register repo token
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      run: |
+        echo repo_token: ${COVERALLS_REPO_TOKEN} > ./.coveralls.yml
     - run: npm install
     - run: npm run build --if-present
     - run: npm test
@@ -21,10 +26,11 @@ jobs:
       run: |
            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
            chmod +x ./cc-test-reporter
-           ./cc-test-reporter before-build
-           
+           ./cc-test-reporter before-build           
     
-    - name: After success
+    - name: Upload coverall reports
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload to CoPilot
+      run: bash <(curl -s https://copilot.blackducksoftware.com/ci/githubactions/scripts/upload)
