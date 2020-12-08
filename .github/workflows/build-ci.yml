@@ -1,5 +1,5 @@
 name: Paypay Node SDK CI
-on: [push]
+on: [pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,6 +12,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+
     - name: register repo token
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
