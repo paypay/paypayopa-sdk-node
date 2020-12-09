@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         node-version: ['14', '12', '10']
-        check-lts: true
+        check-latest: true
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
