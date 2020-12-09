@@ -7,7 +7,8 @@ jobs:
       CC_TEST_REPORTER_ID: cbd6f734a0585395a1e664feb0be141affd12ea562966f98fa8f81d29e868e30
     strategy:
       matrix:
-        node-version: ['lts/*', '14', '12', '10']
+        node-version: ['14', '12', '10']
+        check-lts: true
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
