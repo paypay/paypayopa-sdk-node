@@ -14,6 +14,16 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    
+    - name: Cache Node.js modules
+      uses: actions/cache@v2
+      with:
+      # npm cache files are stored in `~/.npm` on Linux/macOS
+      path: ~/.npm
+      key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+      restore-keys: |
+        ${{ runner.OS }}-node-
+        ${{ runner.OS }}-
 
     - name: register repo token
       env:
@@ -24,6 +34,8 @@ jobs:
     - run: npm run build --if-present
     - run: npm test
     - run: yarn coveralls
+
+    
 
     - name: Before script
       run: |
