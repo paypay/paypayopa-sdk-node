@@ -1,0 +1,52 @@
+name: Paypay Node SDK CI
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CC_TEST_REPORTER_ID: cbd6f734a0585395a1e664feb0be141affd12ea562966f98fa8f81d29e868e30
+    strategy:
+      matrix:
+        node-version: [14.x, 12.x, 10.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        # npm cache files are stored in `~/.npm` on Linux/macOS
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: register repo token
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      run: |
+        echo repo_token: ${COVERALLS_REPO_TOKEN} > ./.coveralls.yml
+    - run: npm install
+    - run: npm run build --if-present
+    - run: npm test
+    - run: yarn coveralls
+
+    - name: Before script
+      run: |
+           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+           chmod +x ./cc-test-reporter
+           ./cc-test-reporter before-build           
+    
+    - name: Upload coverall reports
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload to CoPilot
+      run: bash <(curl -s https://copilot.blackducksoftware.com/ci/githubactions/scripts/upload)
