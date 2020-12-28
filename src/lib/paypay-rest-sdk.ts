@@ -90,7 +90,7 @@ class PayPayRestSDK {
     this.options.path = this.config.getHttpsPath(nameApi, nameMethod);
     this.options.method = this.config.getHttpsMethod(nameApi, nameMethod);
     this.options.apiKey = this.config.getApiKey(nameApi, nameMethod);
-    
+
     if (this.options.method === "GET" || this.options.method === "DELETE") {
       queryParams = this.options.path.match(/{\w+}/g);
       if (queryParams) {
@@ -114,6 +114,18 @@ class PayPayRestSDK {
       this.options.headers["Content-Length"] = Buffer.byteLength(JSON.stringify(input));
     }
     return this.options;
+  }
+
+  /**
+   * Create a dynamic QR Code to receive payments
+   * @callback                Callback function to handle result
+   * @returns {Object}        Returns result containing STATUS and BODY
+   * @param {Object} payload  JSON object payload
+   */
+  public createPayment = (payload: any, callback: HttpsClientMessage) => {
+    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "CREATE_PAYMENT", payload), payload, (result: any) => {
+      callback(result);
+    });
   }
 
   /**
@@ -359,7 +371,7 @@ class PayPayRestSDK {
       callback(result);
     })
   }
- 
+
   /**
    * Get user authorization status
    *
@@ -371,7 +383,7 @@ class PayPayRestSDK {
     httpsClient.httpsCall(this.paypaySetupOptions("USER_AUTHORIZATION", "GET_USER_AUTHORIZATION_STATUS", inputParams), "", (result: any) => {
       callback(result);
     })
-  }  
+  }
 
   /**
    * Unlink user
@@ -384,7 +396,7 @@ class PayPayRestSDK {
     httpsClient.httpsCall(this.paypaySetupOptions("USER_AUTHORIZATION", "UNLINK_USER", inputParams), "", (result: any) => {
       callback(result);
     })
-  }  
+  }
 }
 
 /**
