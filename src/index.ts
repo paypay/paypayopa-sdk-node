@@ -2,6 +2,7 @@ import { payPayRestSDK } from "./lib/paypay-rest-sdk";
 
 export = {
   Configure: payPayRestSDK.configure,
+  CreatePayment: payPayRestSDK.createPayment,
   QRCodeCreate: payPayRestSDK.qrCodeCreate,
   QRCodeDelete: payPayRestSDK.qrCodeDelete,
   GetCodePaymentDetails: payPayRestSDK.getCodePaymentDetails,
@@ -23,5 +24,5 @@ export = {
   CancelPendingOrder: payPayRestSDK.cancelPendingOrder,
   RefundPendingPayment: payPayRestSDK.refundPendingPayment,
   GetUserAuthorizationStatus: payPayRestSDK.getUserAuthorizationStatus,
-  UnlinkUser: payPayRestSDK.unlinkUser,  
+  UnlinkUser: payPayRestSDK.unlinkUser,
 };

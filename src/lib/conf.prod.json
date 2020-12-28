@@ -1,6 +1,11 @@
 {
   "HOST_NAME": "api.paypay.ne.jp",
   "API_PAYMENT": {
+    "CREATE_PAYMENT": {
+      "METHOD": "POST",
+      "PATH": "/v2/payments",
+      "API_NAME": "v2_createPayment"
+    },
     "QRCODE_CREATE": {
       "METHOD": "POST",
       "PATH": "/v2/codes",
