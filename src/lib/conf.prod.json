@@ -107,7 +107,7 @@
     },
     "PAYMENT_REFUND": {
       "METHOD": "POST",
-      "PATH": "/v1/requestOrder/refunds",
+      "PATH": "/v2/refunds",
       "API_NAME": "v1_createRequestOrderRefund"
     }
   },
