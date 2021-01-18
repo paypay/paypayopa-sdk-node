@@ -367,7 +367,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public refundPendingPayment = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_REQUEST_ORDER", "PAYMENT_REFUND", payload), payload, (result: any) => {
+    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "REFUND_PAYMENT", payload), payload, (result: any) => {
       callback(result);
     })
   }

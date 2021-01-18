@@ -104,11 +104,6 @@
       "METHOD": "DELETE",
       "PATH": "/v1/requestOrder/{merchantPaymentId}",
       "API_NAME": "v1_cancelRequestOrder"
-    },
-    "PAYMENT_REFUND": {
-      "METHOD": "POST",
-      "PATH": "/v2/refunds",
-      "API_NAME": "v1_createRequestOrderRefund"
     }
   },
   "USER_AUTHORIZATION": {
