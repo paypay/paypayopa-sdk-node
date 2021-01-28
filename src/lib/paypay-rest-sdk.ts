@@ -458,7 +458,6 @@ class PayPayRestSDK {
     })
   }
 
-
 }
 
 /**
