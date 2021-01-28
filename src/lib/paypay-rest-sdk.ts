@@ -397,6 +397,68 @@ class PayPayRestSDK {
       callback(result);
     })
   }
+
+  /**
+    * Cash back
+    * 
+    * @callback                    Callback function to handle result
+    * @returns {Object}            Returns result containing STATUS and BODY
+    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
+    * @param inputParams 
+    * @param callback 
+    */
+  public cashBack = (payload: any, callback: HttpsClientMessage): void => {
+    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "GIVE_CASH_BACK", payload), payload, (result: any) => {
+      callback(result);
+    })
+  }
+
+  /**
+   * Get Cash back details
+   * 
+   * @callback                    Callback function to handle result
+   * @returns {Object}            Returns result containing STATUS and BODY
+   * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
+   * @param inputParams 
+   * @param callback 
+   */
+  public getCashBackDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
+    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "CHECK_CASHBACK_DETAILS", inputParams), "", (result: any) => {
+      callback(result);
+    })
+  }
+
+  /**
+   * Reverse Cash back
+   * 
+   * @callback                    Callback function to handle result
+   * @returns {Object}            Returns result containing STATUS and BODY
+   * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
+   * @param inputParams 
+   * @param callback 
+   */
+  public reverseCashBack = (payload: any, callback: HttpsClientMessage): void => {
+    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "REVERSAL_CASHBACK", payload), payload, (result: any) => {
+      callback(result);
+    })
+  }
+
+  /**
+   * Get Reverse Cash back details
+   * 
+   * @callback                    Callback function to handle result
+   * @returns {Object}            Returns result containing STATUS and BODY
+   * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
+   * @param inputParams 
+   * @param callback 
+   */
+  public getReverseCashBackDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
+    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "CHECK_CASHBACK_REVERSE_DETAILS", inputParams), "", (result: any) => {
+      callback(result);
+    })
+  }
+
+
 }
 
 /**

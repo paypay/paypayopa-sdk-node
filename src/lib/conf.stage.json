@@ -55,6 +55,26 @@
       "METHOD": "GET",
       "PATH": "/v2/refunds/{merchantRefundId}",
       "API_NAME": "v2_getRefundDetails"
+    },
+    "GIVE_CASH_BACK": {
+      "METHOD": "POST",
+      "PATH": "/v2/cashback",
+      "API_NAME": "v2_createCashBackRequest"
+    },
+    "CHECK_CASHBACK_DETAILS": {
+      "METHOD": "GET",
+      "PATH": "/v2/cashback/{merchantCashbackId}",
+      "API_NAME": "v2_getCashbackDetails"
+    },
+    "REVERSAL_CASHBACK": {
+      "METHOD": "POST",
+      "PATH": "/v2/cashback_reversal",
+      "API_NAME": "v2_createReverseCashBackRequest"
+    },
+    "CHECK_CASHBACK_REVERSE_DETAILS": {
+      "METHOD": "GET",
+      "PATH": "/v2/cashback_reversal/{merchantCashbackReversalId}/{merchantCashbackId}",
+      "API_NAME": "v2_getReversedCashBackDetails"
     }
   },
   "API_WALLET": {
