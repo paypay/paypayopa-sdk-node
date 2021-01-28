@@ -25,4 +25,8 @@ export = {
   RefundPendingPayment: payPayRestSDK.refundPendingPayment,
   GetUserAuthorizationStatus: payPayRestSDK.getUserAuthorizationStatus,
   UnlinkUser: payPayRestSDK.unlinkUser,
+  CashBack: payPayRestSDK.cashBack,
+  CheckCashBackDetails: payPayRestSDK.getCashBackDetails,
+  ReversalCashBack: payPayRestSDK.reverseCashBack,
+  CheckCashBackReversalDetails: payPayRestSDK.getReverseCashBackDetails,
 };
