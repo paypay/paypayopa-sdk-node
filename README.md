@@ -46,11 +46,11 @@ You need to setup your key and secret using the following:
 To work in production mode you need to specify your production API_KEY & API_SECRET along with a production_mode True boolean flag
 ```javascript
 'use strict';
- const PAYPAY = require('@paypayopa/paypayopa-sdk-node');
- PAYPAY.Configure({
-  clientId: API_KEY,
-  clientSecret: API_SECRET,
-  productionMode: true, 
+const PAYPAY = require('@paypayopa/paypayopa-sdk-node');
+PAYPAY.Configure({
+    clientId: API_KEY,
+    clientSecret: API_SECRET,
+    productionMode: true,
 });
 ```
 or
@@ -59,11 +59,11 @@ or
 To work in sandbox mode you need to specify your sandbox API_KEY & API_SECRET keys along with a False boolean flag or you could just omit the production_mode flag since it defaults to False if not specified
 ```javascript
 'use strict';
- const PAYPAY = require('@paypayopa/paypayopa-sdk-node');
- PAYPAY.Configure({
-  clientId: API_KEY,
-  clientSecret: API_SECRET,
-  productionMode: false, 
+const PAYPAY = require('@paypayopa/paypayopa-sdk-node');
+PAYPAY.Configure({
+    clientId: API_KEY,
+    clientSecret: API_SECRET,
+    productionMode: false,
 });
 ```
 
@@ -85,8 +85,8 @@ For details of all the request and response parameters , check our [API Document
 let payload = {
     merchantPaymentId: "my_payment_id",
     amount: {
-      amount: 1,
-      currency: "JPY"
+        amount: 1,
+        currency: "JPY"
     },
     codeType: "ORDER_QR",
     orderDescription: "Mune's Favourite Cake",
@@ -94,11 +94,11 @@ let payload = {
     redirectUrl: "https://paypay.ne.jp/",
     redirectType: "WEB_LINK",
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1"
-  };
+};
 
 PAYPAY.QRCodeCreate(payload, (response) => {
     console.log(response.BODY.resultInfo.code);
-  });
+});
 ```
 
 Did you get a **HTTP 201** response, if yes then you are all set for the next step.
@@ -116,10 +116,10 @@ Now that you have created a Code, the next  step is to implement polling to get 
 ### Fetch a particular QR CODE payment details
 ```javascript
 let merchantPaymentId = 'merchantPaymentId';
-  PAYPAY.GetCodePaymentDetails(Array(merchantPaymentId), (response) => {
+PAYPAY.GetCodePaymentDetails(Array(merchantPaymentId), (response) => {
     console.log(response.BODY.resultInfo.code);
     console.log(response.BODY.data.status);
-  });
+});
 ```
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/jp/v1.0/dynamicqrcode#operation/getPaymentDetails)
 On successful payment, the status in the response will change to **COMPLETED**
@@ -162,7 +162,7 @@ Following are the important parameters that you can provide for this method:
 
 ```javascript
 PAYPAY.PaymentCancel(Array(merchantPaymentId), (response) => {
-  console.log(response.BODY.resultInfo.code);
+    console.log(response.BODY.resultInfo.code);
 });
 ```
 
@@ -183,11 +183,11 @@ So the user has decided to return the goods they have purchased and needs to be 
     merchantRefundId: 'merchant_refund_id',
     paymentId: 'paypay_payment_id',
     amount: {
-      amount: 1,
-      currency: 'JPY',
+        amount: 1,
+        currency: 'JPY',
     },
     reason: 'reason for refund',
-  };
+};
 
 PAYPAY.PaymentRefund(payload, (response) => {
     console.log(response.BODY.resultInfo.code);
@@ -211,17 +211,17 @@ So you are implementing a PreAuth and Capture, and hence want to capture the pay
   let payload = {
     merchantPaymentId: 'merchant_payment_id',
     amount: {
-      amount: 1,
-      currency: 'JPY',
+        amount: 1,
+        currency: 'JPY',
     },
     merchantCaptureId: 'merchant_capture_id',
     requestedAt: 1587460334340,
     orderDescription: 'Order Shipped, Cake with toppings',
-  };
+};
 
-  PAYPAY.PaymentAuthCapture(payload, (response) => {
+PAYPAY.PaymentAuthCapture(payload, (response) => {
     console.log(response.BODY.resultInfo.code);
-  });
+});
 ```
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/dynamicqrcode#operation/capturePaymentAuth).
 
@@ -240,11 +240,11 @@ let payload = {
     merchantRevertId: 'merchant_revert_id',
     paymentId: 'paypay_payment_id',
     reason: 'reason for revert',
-  };
+};
 
-  PAYPAY.PaymentAuthRevert(payload, (response) => {
-     console.log(response.BODY.resultInfo.code);
-  });
+PAYPAY.PaymentAuthRevert(payload, (response) => {
+    console.log(response.BODY.resultInfo.code);
+});
 ```
 For List of params refer to the API guide :
 https://www.paypay.ne.jp/opa/doc/v1.0/dynamicqrcode#operation/revertAuth
@@ -260,7 +260,7 @@ So you want to confirm the status of the refund, maybe because the request for t
 ```javascript
 let merchantPaymentId = 'merchantRefundId'
 PAYPAY.GetRefundDetails(Array(merchantRefundId), (response) => {
-  console.log(response.BODY.resultInfo.code);
+    console.log(response.BODY.resultInfo.code);
 });
 ```
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/dynamicqrcode#operation/getRefundDetails).
@@ -293,23 +293,23 @@ In order to acquire an authorization you need to create a JWT Token -
 
 ```javascript
   let payload = {
-	scopes: [
-	  "direct_debit"
-	],
-	nonce: "random_generated_string",
-	redirectType: "WEB_LINK",
-	redirectUrl: "merchant.domain/path",
-	referenceId: "reference_id",
-	phoneNumber: "phone_number",
-	deviceId: "device_id"
-  };
-  // Calling the method to create the account linking QR Code
-  PAYPAY.AccountLinkQRCodeCreate(payload, (response) => {
-	// Printing if the method call was SUCCESS
-	console.log(response.BODY.resultInfo.code);
-	// Printing the link to the generated QR Code
-	console.log(response.BODY.data.linkQRCodeURL);
-  });
+    scopes: [
+        "direct_debit"
+    ],
+    nonce: "random_generated_string",
+    redirectType: "WEB_LINK",
+    redirectUrl: "merchant.domain/path",
+    referenceId: "reference_id",
+    phoneNumber: "phone_number",
+    deviceId: "device_id"
+};
+// Calling the method to create the account linking QR Code
+PAYPAY.AccountLinkQRCodeCreate(payload, (response) => {
+    // Printing if the method call was SUCCESS
+    console.log(response.BODY.resultInfo.code);
+    // Printing the link to the generated QR Code
+    console.log(response.BODY.data.linkQRCodeURL);
+});
 ```
 
 Once the user has granted authorization, we will return the UserAuthorizationID as a part of the JWT Token in response/ webhook
@@ -319,6 +319,23 @@ Once the user has granted authorization, we will return the UserAuthorizationID 
 const jwtResponse = PAYPAY.ValidateJWT(token, API_SECRET);
 const userAuthorizationId = jwtResponse["userAuthorizationId"];
 ```
+
+### Unlink a user from the client
+
+| Field  | Required  |Type   | Description  |  
+|---|---|---|---|
+|userAuthorizationId|yes|string <= 64 characters|The PayPay user reference id returned by the user authorization flow|
+
+
+```javascript
+// Calling the method to unlink a Payment
+PAYPAY.unlinkUser(userAuthorizationId,(result) => {
+// Printing if the method call was SUCCESS
+console.log(response.BODY.resultInfo.code);
+});
+```
+Did you get SUCCESS in the print statement above, if yes then the API execution has happened correctly.
+For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/direct_debit#operation/unlinkUser).
 
 ### Create a payment
 In order to take a payment, you will need to send a request to us with the following parameters:
@@ -332,14 +349,14 @@ In order to take a payment, you will need to send a request to us with the follo
 
 ```javascript
 let payload = {
-  merchantPaymentId: "my_payment_id",
-  amount: {
-     amount: 1,
-     currency: "JPY"
-  },
-  requestedAt: 1587460334340,
-  userAuthorizationId: "my_user_authorization_id",
-  orderDescription: "Mune's Favourite Cake",
+    merchantPaymentId: "my_payment_id",
+    amount: {
+        amount: 1,
+        currency: "JPY"
+    },
+    requestedAt: 1587460334340,
+    userAuthorizationId: "my_user_authorization_id",
+    orderDescription: "Mune's Favourite Cake",
 };
 // Calling the method to create a qr code
 PAYPAY.CreatePayment(payload, (response) => {
@@ -392,9 +409,9 @@ Following are the important parameters that you can provide for this method:
 
 ```javascript
 PAYPAY.PaymentCancel(Array(merchantPaymentId), (response) => {
-  console.log(result);
-  // Printing if the method call was SUCCESS
-  console.log(response.BODY.resultInfo.code);
+    console.log(result);
+    // Printing if the method call was SUCCESS
+    console.log(response.BODY.resultInfo.code);
 });
 ```
 
@@ -418,11 +435,11 @@ So the user has decided to return the goods they have purchased and needs to be 
     merchantRefundId: 'merchant_refund_id',
     paymentId: 'paypay_payment_id',
     amount: {
-      amount: 1,
-      currency: 'JPY',
+        amount: 1,
+        currency: 'JPY',
     },
     reason: 'reason for refund',
-  };
+};
 // Calling the method to refund a Payment
 PAYPAY.PaymentRefund(payload, (response) => {
     // Printing if the method call was SUCCESS
@@ -447,8 +464,8 @@ So you want to confirm the status of the refund, maybe because the request for t
 ```javascript
 let merchantPaymentId = 'merchantRefundId'
 PAYPAY.GetRefundDetails(Array(merchantRefundId), (response) => {
-  // Printing if the method call was SUCCESS
-  console.log(response.BODY.resultInfo.code);
+    // Printing if the method call was SUCCESS
+    console.log(response.BODY.resultInfo.code);
 });
 ```
 Did you get **SUCCESS** in the print statement above, if yes then the API execution has happen correctly.
@@ -476,22 +493,22 @@ Means the request is received, and will be processed sometime later.
 This status code indicates an error because the information provided in request is not able to be processed. The following OPA error code may be returned.
 
 - INVALID_PARAMS
-The information provided by the request contains invalid data. E.g. unsupported currency.
+  The information provided by the request contains invalid data. E.g. unsupported currency.
 
 - UNACCEPTABLE_OP
-The requested operation is not able to be processed due to the current condition. E.g. the transaction limit exceeded.
+  The requested operation is not able to be processed due to the current condition. E.g. the transaction limit exceeded.
 
 - NO_SUFFICIENT_FUND
-There is no sufficient fund for the transaction.
+  There is no sufficient fund for the transaction.
 
 **401**
 This status code indicates an authorization error. The following OPA error code may be returned.
 
 - UNAUTHORIZED
-No valid api key and secret provided.
+  No valid api key and secret provided.
 
 - OP_OUT_OF_SCOPE
-The operation is not permitted.
+  The operation is not permitted.
 
 **404**
 This status code indicates that the requested resource is not existing in the system.
@@ -505,10 +522,10 @@ This status code indicates that the client sent too many requests in a specific 
 This status code indicates that something went wrong on the PayPay side. A few OPA error code could be returned.
 
 - TRANSACTION_FAILED
-This code means the transaction is failed on the PayPay side. You can create new transactions for the same purpose with reasonable backoff time.
+  This code means the transaction is failed on the PayPay side. You can create new transactions for the same purpose with reasonable backoff time.
 
 - INTERNAL_SERVER_ERROR
-This code means that something goes wrong, but we don't know exactly if the transaction has happened or not. It should be treated as unknown payment status.
+  This code means that something goes wrong, but we don't know exactly if the transaction has happened or not. It should be treated as unknown payment status.
 
 **502,503,504**
 Treated as unknown payment status.
