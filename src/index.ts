@@ -1,4 +1,4 @@
-import { payPayRestSDK } from "./lib/paypay-rest-sdk";
+import { payPayRestSDK, PayPayRestSDK } from "./lib/paypay-rest-sdk";
 
 export = {
   Configure: payPayRestSDK.configure,
@@ -29,4 +29,5 @@ export = {
   CheckCashBackDetails: payPayRestSDK.getCashBackDetails,
   ReversalCashBack: payPayRestSDK.reverseCashBack,
   CheckCashBackReversalDetails: payPayRestSDK.getReverseCashBackDetails,
+  PayPayRestSDK
 };
