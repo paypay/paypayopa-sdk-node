@@ -36,7 +36,9 @@ jobs:
     - run: npm install
     - run: npm run build --if-present
     - run: npm test
-    - run: yarn coveralls
+    - name: coveralls
+      run: yarn coveralls
+      continue-on-error: true
 
     - name: Before script
       run: |
@@ -48,6 +50,7 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
 
     - name: Upload to CoPilot
       run: bash <(curl -s https://copilot.blackducksoftware.com/ci/githubactions/scripts/upload)
