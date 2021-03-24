@@ -4,7 +4,7 @@
  * Right now, we don't have any such checks, this is a dummy file
  */
 
-class Auth {
+export class Auth {
   clientId: string;
   clientSecret: string;
   merchantId?: string;
@@ -28,5 +28,3 @@ class Auth {
     this.merchantId = merchantId;
   }
 }
-
-export let auth = new Auth();

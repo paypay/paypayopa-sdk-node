@@ -1,7 +1,7 @@
 /*
  * Main file, methods that are exposed to end-user
  */
-import { auth } from "./auth";
+import { Auth } from "./auth";
 import { Conf } from "./conf";
 import { httpsClient } from "./httpsClient";
 import { HmacSHA256, enc, algo } from "crypto-js";
@@ -15,10 +15,12 @@ export interface HttpsClientMessage {
 class PayPayRestSDK {
   private options: any = "";
   private productionMode: boolean = false;
+  private auth: Auth;
   private config: Conf;
 
   constructor() {
     this.config = new Conf(this.productionMode);
+    this.auth = new Auth();
   }
 
   /**
@@ -28,7 +30,7 @@ class PayPayRestSDK {
    * @param {string}  merchantId    MERCHANT_ID provided by end-user
    */
   public configure = (clientConfig: { clientId: string; clientSecret: string; merchantId?: string; productionMode: boolean; }) => {
-    auth.setAuth(clientConfig.clientId, clientConfig.clientSecret, clientConfig.merchantId);
+    this.auth.setAuth(clientConfig.clientId, clientConfig.clientSecret, clientConfig.merchantId);
     if (clientConfig.productionMode) {
       this.productionMode = clientConfig.productionMode
     } else {
@@ -72,9 +74,9 @@ class PayPayRestSDK {
     this.options.port = this.config.getPortNumber();
     this.options.headers = {
       "Authorization": header,
-      "X-ASSUME-MERCHANT": auth.merchantId,
+      "X-ASSUME-MERCHANT": this.auth.merchantId,
     };
-    if (isempty.includes(auth.merchantId)) {
+    if (isempty.includes(this.auth.merchantId)) {
       this.options.headers = {
         "Authorization": header,
       };
@@ -106,7 +108,7 @@ class PayPayRestSDK {
     const authHeader = this.createAuthHeader(this.options.method,
       cleanPath,
       this.options.method === "GET" || this.options.method === "DELETE" ? null : input,
-      auth);
+      this.auth);
     this.setHttpsOptions(authHeader);
 
     if (this.options.method === "POST") {
@@ -464,3 +466,4 @@ class PayPayRestSDK {
  * These are methods and variables that are exposed to end-user
  */
 export let payPayRestSDK = new PayPayRestSDK();
+export { PayPayRestSDK };
