@@ -1,4 +1,4 @@
-# Paypay OPA SDK - Node.
+# Paypay OPA SDK - Node..
 
 [![License](https://img.shields.io/:license-apache2.0-red.svg)](https://opensource.org/licenses/Apache-2.0)
 [![npm](https://img.shields.io/npm/v/@paypayopa/paypayopa-sdk-node)](https://www.npmjs.com/package/@paypayopa/paypayopa-sdk-node)
