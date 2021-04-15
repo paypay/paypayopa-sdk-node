@@ -1,5 +1,6 @@
 import * as stagingConfig from "./conf.stage.json";
 import * as prodConfig from "./conf.prod.json";
+import * as perfConfig from "./conf.perf.json";
 
 export interface Config {
   HOST_NAME: string;
@@ -18,6 +19,7 @@ export class Conf {
 
   private readonly stagingConfig: Config = stagingConfig;
   private readonly prodConfig: Config = prodConfig;
+  private readonly perfConfig: Config = perfConfig;
 
   private readonly configLookup: any;
 
@@ -26,6 +28,9 @@ export class Conf {
       this.configLookup = JSON.parse(JSON.stringify(this.prodConfig));
     } else {
       this.configLookup = JSON.parse(JSON.stringify(this.stagingConfig));
+    }
+    if (perfMode) {
+      this.configLookup = JSON.parse(JSON.stringify(this.perfConfig));
     }
   }
 
