@@ -23,7 +23,7 @@ export class Conf {
 
   private readonly configLookup: any;
 
-  constructor(productionMode: boolean = false) {
+  constructor(productionMode: boolean = false, perfMode: boolean = false) {
     if (productionMode) {
       this.configLookup = JSON.parse(JSON.stringify(this.prodConfig));
     } else {
