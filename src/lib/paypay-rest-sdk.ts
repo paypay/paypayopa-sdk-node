@@ -28,7 +28,7 @@ class PayPayRestSDK {
    * Set authentication passed by end-user
    * @param clientConfig
    */
-  public configure = (clientConfig: { clientId: string; clientSecret: string; merchantId?: string; productionMode: boolean; perfMode: boolean; }) => {
+  public configure = (clientConfig: { clientId: string; clientSecret: string; merchantId?: string; productionMode: boolean; perfMode?: boolean; }) => {
     this.auth.setAuth(clientConfig.clientId, clientConfig.clientSecret, clientConfig.merchantId);
     if (clientConfig.productionMode) {
       this.productionMode = clientConfig.productionMode
