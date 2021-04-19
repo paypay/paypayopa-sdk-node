@@ -15,28 +15,30 @@ export interface HttpsClientMessage {
 class PayPayRestSDK {
   private options: any = "";
   private productionMode: boolean = false;
+  private perfMode: boolean = false;
   private auth: Auth;
   private config: Conf;
 
   constructor() {
-    this.config = new Conf(this.productionMode);
+    this.config = new Conf(this.productionMode, this.perfMode);
     this.auth = new Auth();
   }
 
   /**
    * Set authentication passed by end-user
-   * @param {string}  clientId      API_KEY provided by end-user
-   * @param {string}  clientSecret  API_SECRET provided by end-user
-   * @param {string}  merchantId    MERCHANT_ID provided by end-user
+   * @param clientConfig
    */
-  public configure = (clientConfig: { clientId: string; clientSecret: string; merchantId?: string; productionMode: boolean; }) => {
+  public configure = (clientConfig: { clientId: string; clientSecret: string; merchantId?: string; productionMode?: boolean; perfMode?: boolean; }) => {
     this.auth.setAuth(clientConfig.clientId, clientConfig.clientSecret, clientConfig.merchantId);
     if (clientConfig.productionMode) {
       this.productionMode = clientConfig.productionMode
     } else {
       this.productionMode = false;
     }
-    this.config = new Conf(this.productionMode);
+    if (clientConfig.perfMode) {
+      this.perfMode = clientConfig.perfMode
+    }
+    this.config = new Conf(this.productionMode, this.perfMode);
   }
 
   private createAuthHeader = (method: string, resourceUrl: string, body: any, auth: any) => {
