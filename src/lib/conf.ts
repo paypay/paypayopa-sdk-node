@@ -1,9 +1,7 @@
-import * as stagingConfig from "./conf.stage.json";
-import * as prodConfig from "./conf.prod.json";
-import * as perfConfig from "./conf.perf.json";
+import * as pathConfig from "./conf.path.json";
+import {HOST_PATH} from "./constants";
 
 export interface Config {
-  HOST_NAME: string;
   PORT_NUMBER?: number;
   API_PAYMENT: {};
   API_WALLET: {};
@@ -17,20 +15,19 @@ export interface Config {
 export class Conf {
   options: { [k: string]: any } = {};
 
-  private readonly stagingConfig: Config = stagingConfig;
-  private readonly prodConfig: Config = prodConfig;
-  private readonly perfConfig: Config = perfConfig;
+  private readonly pathConfig: Config = pathConfig;
 
   private readonly configLookup: any;
 
   constructor(productionMode: boolean = false, perfMode: boolean = false) {
+    this.configLookup = JSON.parse(JSON.stringify(this.pathConfig));
     if (productionMode) {
-      this.configLookup = JSON.parse(JSON.stringify(this.prodConfig));
+      this.configLookup.HOST_NAME = HOST_PATH.PROD
     } else {
-      this.configLookup = JSON.parse(JSON.stringify(this.stagingConfig));
+      this.configLookup.HOST_NAME = HOST_PATH.STAGING;
     }
-    if (perfMode) {
-      this.configLookup = JSON.parse(JSON.stringify(this.perfConfig));
+    if (perfMode !== undefined) {
+      this.configLookup.HOST_NAME = HOST_PATH.PERF_MODE;
     }
   }
 
