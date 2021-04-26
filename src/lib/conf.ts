@@ -19,14 +19,14 @@ export class Conf {
 
   private readonly configLookup: any;
 
-  constructor(productionMode: boolean = false, perfMode: boolean = false) {
+  constructor(productionMode: boolean = false, perfMode: boolean) {
     this.configLookup = JSON.parse(JSON.stringify(this.pathConfig));
     if (productionMode) {
       this.configLookup.HOST_NAME = HOST_PATH.PROD
     } else {
       this.configLookup.HOST_NAME = HOST_PATH.STAGING;
     }
-    if (perfMode !== undefined) {
+    if (perfMode) {
       this.configLookup.HOST_NAME = HOST_PATH.PERF_MODE;
     }
   }
