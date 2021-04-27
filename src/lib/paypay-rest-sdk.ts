@@ -16,7 +16,7 @@ class PayPayRestSDK {
   private options: any = "";
   private productionMode: boolean = false;
   private perfMode: boolean = false;
-  private auth: Auth;
+  private readonly auth: Auth;
   private config: Conf;
 
   constructor() {
