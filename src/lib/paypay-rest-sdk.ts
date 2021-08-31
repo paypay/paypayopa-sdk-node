@@ -127,7 +127,15 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public createPayment = (payload: any, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "CREATE_PAYMENT", payload), payload, (result: any) => {
+    const agreeSimilarTransaction = payload.agreeSimilarTransaction
+    if(agreeSimilarTransaction){
+      delete payload.agreeSimilarTransaction
+    }
+    const options = this.paypaySetupOptions("API_PAYMENT", "CREATE_PAYMENT", payload)
+    if(agreeSimilarTransaction){
+      this.options.path = this.options.path + "?agreeSimilarTransaction=1"
+    }
+    httpsClient.httpsCall(options, payload, (result: any) => {
       callback(result);
     });
   }
