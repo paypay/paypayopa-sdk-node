@@ -89,25 +89,24 @@ class PayPayRestSDK {
       options.method === "GET" || options.method === "DELETE" ? null : input,
       this.auth);
 
-    {
-      options.hostname = this.config.getHostname();
-      options.port = this.config.getPortNumber();
-      options.headers = {};
+    options.hostname = this.config.getHostname();
+    options.port = this.config.getPortNumber();
+    options.headers = {};
 
-      options.headers["Authorization"] = authHeader;
+    options.headers["Authorization"] = authHeader;
 
-      let isempty = ["undefined", "null"];
-      if (this.auth.merchantId && !isempty.includes(this.auth.merchantId)) {
-        options.headers["X-ASSUME-MERCHANT"] = this.auth.merchantId;
-      }
-
-      this.config.setHttpsOptions(options);
+    let isempty = ["undefined", "null"];
+    if (this.auth.merchantId && !isempty.includes(this.auth.merchantId)) {
+      options.headers["X-ASSUME-MERCHANT"] = this.auth.merchantId;
     }
+
 
     if (options.method === "POST") {
       options.headers["Content-Type"] = "application/json";
       options.headers["Content-Length"] = Buffer.byteLength(JSON.stringify(input));
     }
+
+    this.config.setHttpsOptions(options);
     return options;
   }
 
