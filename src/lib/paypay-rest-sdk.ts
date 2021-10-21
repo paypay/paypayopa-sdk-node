@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from "uuid";
 import * as jwt from "jsonwebtoken";
 
 class PayPayRestSDK {
-  private options: any = "";
   private productionMode: boolean = false;
   private perfMode: boolean = false;
   private readonly auth: Auth;
@@ -66,54 +65,50 @@ class PayPayRestSDK {
     return `hmac OPA-Auth:${header}`;
   }
 
-  private setHttpsOptions(header: string) {
-    let isempty: any = [undefined, null, "", "undefined", "null"];
-    this.options.hostname = this.config.getHostname();
-    this.options.port = this.config.getPortNumber();
-    this.options.headers = {
-      "Authorization": header,
-      "X-ASSUME-MERCHANT": this.auth.merchantId,
-    };
-    if (isempty.includes(this.auth.merchantId)) {
-      this.options.headers = {
-        "Authorization": header,
-      };
-    }
-    this.config.setHttpsOptions(this.options);
-  }
-
   private paypaySetupOptions = (nameApi: string, nameMethod: string, input: any) => {
+    const options = this.config.getHttpsOptions();
 
-    let queryParams = [];
-    this.options = this.config.getHttpsOptions();
+    options.path = this.config.getHttpsPath(nameApi, nameMethod);
+    options.method = this.config.getHttpsMethod(nameApi, nameMethod);
+    options.apiKey = this.config.getApiKey(nameApi, nameMethod);
 
-    this.options.path = this.config.getHttpsPath(nameApi, nameMethod);
-    this.options.method = this.config.getHttpsMethod(nameApi, nameMethod);
-    this.options.apiKey = this.config.getApiKey(nameApi, nameMethod);
-
-    if (this.options.method === "GET" || this.options.method === "DELETE") {
-      queryParams = this.options.path.match(/{\w+}/g);
+    if (options.method === "GET" || options.method === "DELETE") {
+      const queryParams = options.path.match(/{\w+}/g);
       if (queryParams) {
         queryParams.forEach((q: any, n: string | number) => {
-          this.options.path = this.options.path.replace(q, input[n]);
+          options.path = options.path.replace(q, input[n]);
         });
       }
-    } else if (this.options.method === "POST") {
+    } else if (options.method === "POST") {
       input.requestedAt = Math.round(new Date().getTime() / 1000);
     }
 
-    let cleanPath = this.options.path.split("?")[0];
-    const authHeader = this.createAuthHeader(this.options.method,
+    let cleanPath = options.path.split("?")[0];
+    const authHeader = this.createAuthHeader(options.method,
       cleanPath,
-      this.options.method === "GET" || this.options.method === "DELETE" ? null : input,
+      options.method === "GET" || options.method === "DELETE" ? null : input,
       this.auth);
-    this.setHttpsOptions(authHeader);
 
-    if (this.options.method === "POST") {
-      this.options.headers["Content-Type"] = "application/json";
-      this.options.headers["Content-Length"] = Buffer.byteLength(JSON.stringify(input));
+    {
+      options.hostname = this.config.getHostname();
+      options.port = this.config.getPortNumber();
+      options.headers = {};
+
+      options.headers["Authorization"] = authHeader;
+
+      let isempty = ["undefined", "null"];
+      if (this.auth.merchantId && !isempty.includes(this.auth.merchantId)) {
+        options.headers["X-ASSUME-MERCHANT"] = this.auth.merchantId;
+      }
+
+      this.config.setHttpsOptions(options);
     }
-    return this.options;
+
+    if (options.method === "POST") {
+      options.headers["Content-Type"] = "application/json";
+      options.headers["Content-Length"] = Buffer.byteLength(JSON.stringify(input));
+    }
+    return options;
   }
 
   /**
