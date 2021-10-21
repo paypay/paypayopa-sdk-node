@@ -1,9 +1,23 @@
 import * as https from "https";
 
-class HttpsClient {
-  constructor() {}
+export interface HttpsClientSuccess {
+  STATUS: number;
+  BODY: string;
+}
 
-  httpsCall(options: any, payload = "", callback: any) {
+export interface HttpsClientError {
+  STATUS: number;
+  ERROR: string;
+}
+
+export interface HttpsClientMessage {
+  (message: HttpsClientSuccess | HttpsClientError): void;
+}
+
+export class HttpsClient {
+  constructor() { }
+
+  httpsCall(options: any, payload = "", callback: HttpsClientMessage) {
     let body = "";
     let status: number;
     const apiName = options.apiKey;
@@ -15,8 +29,8 @@ class HttpsClient {
         body += Buffer.from(chunk);
       });
       res.on("end", () => {
-        if (status < 200  || status > 299 ) {
-          const parseBody =  JSON.parse(body);
+        if (status < 200 || status > 299) {
+          const parseBody = JSON.parse(body);
           const code = parseBody.resultInfo.code;
           const codeId = parseBody.resultInfo.codeId;
           const RESOLVE_URL = `https://developer.paypay.ne.jp/develop/resolve?api_name=${apiName}&code=${code}&code_id=${codeId}`;

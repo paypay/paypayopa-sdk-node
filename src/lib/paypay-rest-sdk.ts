@@ -3,14 +3,10 @@
  */
 import { Auth } from "./auth";
 import { Conf } from "./conf";
-import { httpsClient } from "./httpsClient";
+import { httpsClient, HttpsClientMessage } from "./httpsClient";
 import { HmacSHA256, enc, algo } from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
 import * as jwt from "jsonwebtoken";
-
-export interface HttpsClientMessage {
-  (message: string): void;
-}
 
 class PayPayRestSDK {
   private options: any = "";
