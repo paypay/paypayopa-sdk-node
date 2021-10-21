@@ -13,6 +13,7 @@ class PayPayRestSDK {
   private perfMode: boolean = false;
   private readonly auth: Auth;
   private config: Conf;
+  private persistedHttpsOptions: any = {};
 
   constructor() {
     this.config = new Conf(this.productionMode, this.perfMode);
@@ -42,7 +43,7 @@ class PayPayRestSDK {
 
     let contentType = "application/json";
     let payload = JSON.stringify(body);
-    let isempty: any = [undefined, null, "", "undefined", "null"];
+    const isempty = ["", "undefined", "null"];
 
     if (isempty.includes(payload)) {
       contentType = "empty";
@@ -66,7 +67,7 @@ class PayPayRestSDK {
   }
 
   private paypaySetupOptions = (nameApi: string, nameMethod: string, input: any) => {
-    const options = this.config.getHttpsOptions();
+    const options = this.persistedHttpsOptions;
 
     options.path = this.config.getHttpsPath(nameApi, nameMethod);
     options.method = this.config.getHttpsMethod(nameApi, nameMethod);
@@ -105,7 +106,8 @@ class PayPayRestSDK {
       options.headers["Content-Length"] = Buffer.byteLength(JSON.stringify(input));
     }
 
-    this.config.setHttpsOptions(options);
+    this.persistedHttpsOptions = options;
+
     return options;
   }
 

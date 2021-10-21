@@ -17,7 +17,11 @@ export interface HttpsClientMessage {
 export class HttpsClient {
   constructor() { }
 
-  httpsCall(options: any, payload = "", callback: HttpsClientMessage) {
+  httpsCall(
+    options: https.RequestOptions & { apiKey?: string },
+    payload = "",
+    callback: HttpsClientMessage,
+  ) {
     let body = "";
     let status: number;
     const apiName = options.apiKey;
