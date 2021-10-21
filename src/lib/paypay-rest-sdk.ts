@@ -36,7 +36,7 @@ class PayPayRestSDK {
     this.config = new Conf(this.productionMode, this.perfMode);
   }
 
-  private createAuthHeader = (method: string, resourceUrl: string, body: any, auth: any) => {
+  private createAuthHeader = (method: string, resourceUrl: string, body: unknown) => {
     const epoch = Math.floor(Date.now() / 1000);
     const nonce = uuidv4();
 
@@ -58,9 +58,9 @@ class PayPayRestSDK {
     }
     const signatureRawList = [resourceUrl, method, nonce, epoch, contentType, payload];
     const signatureRawData = signatureRawList.join("\n");
-    const hashed = HmacSHA256(signatureRawData, auth.clientSecret);
+    const hashed = HmacSHA256(signatureRawData, this.auth.clientSecret);
     const hashed64 = enc.Base64.stringify(hashed);
-    const headList = [auth.clientId, hashed64, nonce, epoch, payload];
+    const headList = [this.auth.clientId, hashed64, nonce, epoch, payload];
     const header = headList.join(":");
     return `hmac OPA-Auth:${header}`;
   }
@@ -86,8 +86,7 @@ class PayPayRestSDK {
     let cleanPath = options.path.split("?")[0];
     const authHeader = this.createAuthHeader(options.method,
       cleanPath,
-      options.method === "GET" || options.method === "DELETE" ? null : input,
-      this.auth);
+      options.method === "GET" || options.method === "DELETE" ? null : input);
 
     options.hostname = this.config.getHostname();
     options.port = this.config.getPortNumber();
