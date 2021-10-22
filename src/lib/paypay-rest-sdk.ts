@@ -122,7 +122,7 @@ class PayPayRestSDK {
   /**
    * Create a dynamic QR Code to receive payments
    * @callback                Callback function to handle result
-   * @returns {Object}        Returns result containing STATUS and BODY
+   * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
   public createPayment(payload: any, callback?: HttpsClientMessage) {
@@ -132,7 +132,7 @@ class PayPayRestSDK {
   /**
    * Create a dynamic QR Code to receive payments
    * @callback                Callback function to handle result
-   * @returns {Object}        Returns result containing STATUS and BODY
+   * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
   public qrCodeCreate(payload: any, callback?: HttpsClientMessage) {
@@ -153,7 +153,7 @@ class PayPayRestSDK {
    * Get payment details for web cashier and Dynamic QR
    *
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public getCodePaymentDetails(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
@@ -164,7 +164,7 @@ class PayPayRestSDK {
    * Get payment details
    *
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public getPaymentDetails(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
@@ -176,7 +176,7 @@ class PayPayRestSDK {
    * This api is used in case, while creating a payment, the client can not determine the status of the payment
    *
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public paymentCancel(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
@@ -188,7 +188,7 @@ class PayPayRestSDK {
    * This api is used to capture the payment authorization for a payment
    *
    * @callback                Callback function to handle result
-   * @returns {Object}        Returns result containing STATUS and BODY
+   * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
   public paymentAuthCapture(payload: any, callback?: HttpsClientMessage) {
@@ -200,7 +200,7 @@ class PayPayRestSDK {
    * The following api is used when a payment needs to be cancelled. For example, when the user cancels the order
    *
    * @callback                Callback function to handle result
-   * @returns {Object}        Returns result containing STATUS and BODY
+   * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
   public paymentAuthRevert(payload: any, callback?: HttpsClientMessage) {
@@ -211,7 +211,7 @@ class PayPayRestSDK {
    * Refund a payment
    *
    * @callback                Callback function to handle result
-   * @returns {Object}        Returns result containing STATUS and BODY
+   * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
   public paymentRefund(payload: any, callback?: HttpsClientMessage) {
@@ -222,7 +222,7 @@ class PayPayRestSDK {
    * Get refund details
    *
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public getRefundDetails(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
@@ -234,7 +234,7 @@ class PayPayRestSDK {
    * Check if user has enough balance to make a payment
    *
    * @callback                   Callback function to handle result
-   * @returns {Object}           Returns result containing STATUS and BODY
+   * @returns {Promise}          Promise resolving to object containing STATUS and BODY
    * @param {Array} inputParams  Array of userAuthorizationId, amount, currency, productType
    */
   public checkUserWalletBalance(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
@@ -256,7 +256,7 @@ class PayPayRestSDK {
    * Receive the user authorization result
    *
    * @callback                   Callback function to handle result
-   * @returns {Object}           Returns result containing STATUS and BODY
+   * @returns {Promise}          Promise resolving to object containing STATUS and BODY
    * @param {Array} inputParams  Array of apiKey, jwtToken
    */
   public authorizationResult(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
@@ -266,7 +266,7 @@ class PayPayRestSDK {
   /**
    * Create an account link QR Code to authorise OPA client
    * @callback                Callback function to handle result
-   * @returns {Object}        Returns result containing STATUS and BODY
+   * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
   public accountLinkQRCodeCreate(payload: any, callback?: HttpsClientMessage) {
@@ -295,7 +295,7 @@ class PayPayRestSDK {
    * Create pending payment
    *
    * @callback                Callback function to handle result
-   * @returns {Object}        Returns result containing STATUS and BODY
+   * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
   public createPendingPayment(payload: any, callback?: HttpsClientMessage) {
@@ -306,7 +306,7 @@ class PayPayRestSDK {
    * Get pending order details
    *
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public getPendingPaymentDetails(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
@@ -317,7 +317,7 @@ class PayPayRestSDK {
    * Cancel pending order
    *
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public cancelPendingOrder(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
@@ -328,7 +328,7 @@ class PayPayRestSDK {
    * Refund pending payment
    *
    * @callback                Callback function to handle result
-   * @returns {Object}        Returns result containing STATUS and BODY
+   * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
   public refundPendingPayment(payload: any, callback?: HttpsClientMessage) {
@@ -339,7 +339,7 @@ class PayPayRestSDK {
    * Get user authorization status
    *
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    */
   public getUserAuthorizationStatus(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
@@ -350,7 +350,7 @@ class PayPayRestSDK {
    * Unlink user
    *
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    */
   public unlinkUser(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
@@ -374,7 +374,7 @@ class PayPayRestSDK {
    * Get Cash back details
    * 
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    * @param inputParams 
    * @param callback 
@@ -387,7 +387,7 @@ class PayPayRestSDK {
    * Reverse Cash back
    * 
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    * @param inputParams 
    * @param callback 
@@ -400,7 +400,7 @@ class PayPayRestSDK {
    * Get Reverse Cash back details
    * 
    * @callback                    Callback function to handle result
-   * @returns {Object}            Returns result containing STATUS and BODY
+   * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    * @param inputParams 
    * @param callback 
