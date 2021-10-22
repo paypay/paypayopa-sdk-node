@@ -29,7 +29,7 @@ class PayPayRestSDK {
    * Set authentication passed by end-user
    * @param clientConfig
    */
-  public configure(clientConfig: { clientId: string; clientSecret: string; merchantId?: string; productionMode?: boolean; perfMode?: boolean; }) {
+  public configure = (clientConfig: { clientId: string; clientSecret: string; merchantId?: string; productionMode?: boolean; perfMode?: boolean; }) => {
     this.auth.setAuth(clientConfig.clientId, clientConfig.clientSecret, clientConfig.merchantId);
     if (clientConfig.productionMode) {
       this.productionMode = clientConfig.productionMode
@@ -42,7 +42,7 @@ class PayPayRestSDK {
     this.config = new Conf(this.productionMode, this.perfMode);
   }
 
-  private createAuthHeader(method: string, resourceUrl: string, body: unknown) {
+  private createAuthHeader = (method: string, resourceUrl: string, body: unknown) => {
     const epoch = Math.floor(Date.now() / 1000);
     const nonce = uuidv4();
 
@@ -71,7 +71,7 @@ class PayPayRestSDK {
     return `hmac OPA-Auth:${header}`;
   }
 
-  private paypaySetupOptions(endpoint: Endpoint, input: any) {
+  private paypaySetupOptions = (endpoint: Endpoint, input: any) => {
     let path = endpoint.path;
     const method = endpoint.method;
 
@@ -84,9 +84,7 @@ class PayPayRestSDK {
       }
     }
 
-
     const headers: Record<string, string | number> = {};
-
 
     const isempty = ["undefined", "null"];
     if (this.auth.merchantId && !isempty.includes(this.auth.merchantId)) {
@@ -115,7 +113,7 @@ class PayPayRestSDK {
     };
   }
 
-  private getEndpoint(nameApi: string, nameMethod: string): Endpoint {
+  private getEndpoint = (nameApi: string, nameMethod: string): Endpoint => {
     return {
       method: this.config.getHttpsMethod(nameApi, nameMethod),
       path: this.config.getHttpsPath(nameApi, nameMethod),
@@ -123,7 +121,7 @@ class PayPayRestSDK {
     };
   }
 
-  private invokeMethod(endpoint: Endpoint, payload: unknown, callback?: HttpsClientMessage): Promise<HttpsClientSuccess | HttpsClientError> {
+  private invokeMethod = (endpoint: Endpoint, payload: unknown, callback?: HttpsClientMessage): Promise<HttpsClientSuccess | HttpsClientError> => {
     const options = this.paypaySetupOptions(endpoint, payload);
     return new Promise((resolve) => {
       httpsClient.httpsCall(options, payload, (result) => {
@@ -141,10 +139,10 @@ class PayPayRestSDK {
    * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public createPayment(
+  public createPayment = (
     ...args: [payload: any, callback?: HttpsClientMessage]
       | [payload: any, agreeSimilarTransaction: boolean, callback?: HttpsClientMessage]
-  ) {
+  ) => {
     const payload = args[0];
     const agreeSimilarTransaction = args[1] === true;
     const callback = typeof args[1] === "boolean" ? args[2] : args[1];
@@ -159,7 +157,7 @@ class PayPayRestSDK {
    * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public qrCodeCreate(payload: any, callback?: HttpsClientMessage) {
+  public qrCodeCreate = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "QRCODE_CREATE"), payload, callback);
   }
 
@@ -169,7 +167,7 @@ class PayPayRestSDK {
    * @returns {Object}            Returns result containing STATUS and BODY
    * @param {string} inputParams  Array of codeId : QR Code that is to be deleted
    */
-  public qrCodeDelete(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public qrCodeDelete = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "QRCODE_DELETE"), inputParams, callback);
   }
 
@@ -180,7 +178,7 @@ class PayPayRestSDK {
    * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public getCodePaymentDetails(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public getCodePaymentDetails = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "GET_CODE_PAYMENT_DETAILS"), inputParams, callback);
   }
 
@@ -191,7 +189,7 @@ class PayPayRestSDK {
    * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public getPaymentDetails(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public getPaymentDetails = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "GET_PAYMENT_DETAILS"), inputParams, callback);
   }
 
@@ -203,7 +201,7 @@ class PayPayRestSDK {
    * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public paymentCancel(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public paymentCancel = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "CANCEL_PAYMENT"), inputParams, callback);
   }
 
@@ -215,7 +213,7 @@ class PayPayRestSDK {
    * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public paymentAuthCapture(payload: any, callback?: HttpsClientMessage) {
+  public paymentAuthCapture = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "PAYMENT_AUTH_CAPTURE"), payload, callback);
   }
 
@@ -227,7 +225,7 @@ class PayPayRestSDK {
    * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public paymentAuthRevert(payload: any, callback?: HttpsClientMessage) {
+  public paymentAuthRevert = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "PAYMENT_AUTH_REVERT"), payload, callback);
   }
 
@@ -238,7 +236,7 @@ class PayPayRestSDK {
    * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public paymentRefund(payload: any, callback?: HttpsClientMessage) {
+  public paymentRefund = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "REFUND_PAYMENT"), payload, callback);
   }
 
@@ -249,7 +247,7 @@ class PayPayRestSDK {
    * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public getRefundDetails(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public getRefundDetails = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "GET_REFUND_DETAILS"), inputParams, callback);
   }
 
@@ -261,7 +259,7 @@ class PayPayRestSDK {
    * @returns {Promise}          Promise resolving to object containing STATUS and BODY
    * @param {Array} inputParams  Array of userAuthorizationId, amount, currency, productType
    */
-  public checkUserWalletBalance(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public checkUserWalletBalance = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_WALLET", "CHECK_BALANCE"), inputParams, callback);
   }
 
@@ -272,7 +270,7 @@ class PayPayRestSDK {
    * @returns {Object}           Returns result containing STATUS and BODY
    * @param {Array} inputParams  Array of apiKey, jwtToken
    */
-  public authorization(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public authorization = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_DIRECT_DEBIT", "AUTHORIZATION"), inputParams, callback);
   }
 
@@ -283,7 +281,7 @@ class PayPayRestSDK {
    * @returns {Promise}          Promise resolving to object containing STATUS and BODY
    * @param {Array} inputParams  Array of apiKey, jwtToken
    */
-  public authorizationResult(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public authorizationResult = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_DIRECT_DEBIT", "AUTHORIZATION_RESULT"), inputParams, callback);
   }
 
@@ -293,7 +291,7 @@ class PayPayRestSDK {
    * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public accountLinkQRCodeCreate(payload: any, callback?: HttpsClientMessage) {
+  public accountLinkQRCodeCreate = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_ACCOUNT_LINK", "QRCODE_CREATE"), payload, callback);
   }
 
@@ -303,15 +301,15 @@ class PayPayRestSDK {
    * @param {Object} token           The token to be verified
    * @param {Object} clientSecret    The client secret to be used for verification
    */
-  public validateJWT(token: string, clientSecret: string): string | object {
+  public validateJWT = (token: string, clientSecret: string): string | object => {
     return jwt.verify(token, Buffer.from(clientSecret, "base64"));
   }
 
-  public paymentPreauthorize(payload: any, callback?: HttpsClientMessage) {
+  public paymentPreauthorize = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "PREAUTHORIZE"), payload, callback);
   }
 
-  public paymentSubscription(payload: any, callback?: HttpsClientMessage) {
+  public paymentSubscription = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_SUBSCRIPTION", "PAYMENTS"), payload, callback);
   }
 
@@ -322,7 +320,7 @@ class PayPayRestSDK {
    * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public createPendingPayment(payload: any, callback?: HttpsClientMessage) {
+  public createPendingPayment = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_REQUEST_ORDER", "PENDING_PAYMENT_CREATE"), payload, callback);
   }
 
@@ -333,7 +331,7 @@ class PayPayRestSDK {
    * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public getPendingPaymentDetails(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public getPendingPaymentDetails = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_REQUEST_ORDER", "GET_ORDER_DETAILS"), inputParams, callback);
   }
 
@@ -344,7 +342,7 @@ class PayPayRestSDK {
    * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
-  public cancelPendingOrder(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public cancelPendingOrder = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_REQUEST_ORDER", "PENDING_ORDER_CANCEL"), inputParams, callback);
   }
 
@@ -355,7 +353,7 @@ class PayPayRestSDK {
    * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
    */
-  public refundPendingPayment(payload: any, callback?: HttpsClientMessage) {
+  public refundPendingPayment = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "REFUND_PAYMENT"), payload, callback);
   }
 
@@ -366,7 +364,7 @@ class PayPayRestSDK {
    * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    */
-  public getUserAuthorizationStatus(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public getUserAuthorizationStatus = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("USER_AUTHORIZATION", "GET_USER_AUTHORIZATION_STATUS"), inputParams, callback);
   }
 
@@ -377,7 +375,7 @@ class PayPayRestSDK {
    * @returns {Promise}           Promise resolving to object containing STATUS and BODY
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    */
-  public unlinkUser(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public unlinkUser = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("USER_AUTHORIZATION", "UNLINK_USER"), inputParams, callback);
   }
 
@@ -390,7 +388,7 @@ class PayPayRestSDK {
     * @param inputParams 
     * @param callback 
     */
-  public cashBack(payload: any, callback?: HttpsClientMessage) {
+  public cashBack = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "GIVE_CASH_BACK"), payload, callback);
   }
 
@@ -403,7 +401,7 @@ class PayPayRestSDK {
    * @param inputParams 
    * @param callback 
    */
-  public getCashBackDetails(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public getCashBackDetails = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "CHECK_CASHBACK_DETAILS"), inputParams, callback);
   }
 
@@ -416,7 +414,7 @@ class PayPayRestSDK {
    * @param inputParams 
    * @param callback 
    */
-  public reverseCashBack(payload: any, callback?: HttpsClientMessage) {
+  public reverseCashBack = (payload: any, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "REVERSAL_CASHBACK"), payload, callback);
   }
 
@@ -429,7 +427,7 @@ class PayPayRestSDK {
    * @param inputParams 
    * @param callback 
    */
-  public getReverseCashBackDetails(inputParams: Array<string | number>, callback?: HttpsClientMessage) {
+  public getReverseCashBackDetails = (inputParams: Array<string | number>, callback?: HttpsClientMessage) => {
     return this.invokeMethod(this.getEndpoint("API_PAYMENT", "CHECK_CASHBACK_REVERSE_DETAILS"), inputParams, callback);
   }
 }
