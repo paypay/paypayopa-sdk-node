@@ -13,7 +13,6 @@ class PayPayRestSDK {
   private perfMode: boolean = false;
   private readonly auth: Auth;
   private config: Conf;
-  private persistedHttpsOptions: any = {};
 
   constructor() {
     this.config = new Conf(this.productionMode, this.perfMode);
@@ -67,48 +66,50 @@ class PayPayRestSDK {
   }
 
   private paypaySetupOptions = (nameApi: string, nameMethod: string, input: any) => {
-    const options = this.persistedHttpsOptions;
+    let path = this.config.getHttpsPath(nameApi, nameMethod);
+    const method = this.config.getHttpsMethod(nameApi, nameMethod);
 
-    options.path = this.config.getHttpsPath(nameApi, nameMethod);
-    options.method = this.config.getHttpsMethod(nameApi, nameMethod);
-    options.apiKey = this.config.getApiKey(nameApi, nameMethod);
-
-    if (options.method === "GET" || options.method === "DELETE") {
-      const queryParams = options.path.match(/{\w+}/g);
+    if (method === "GET" || method === "DELETE") {
+      const queryParams = path.match(/{\w+}/g);
       if (queryParams) {
         queryParams.forEach((q: any, n: string | number) => {
-          options.path = options.path.replace(q, input[n]);
+          path = path.replace(q, input[n]);
         });
       }
-    } else if (options.method === "POST") {
-      input.requestedAt = Math.round(new Date().getTime() / 1000);
     }
 
-    let cleanPath = options.path.split("?")[0];
-    const authHeader = this.createAuthHeader(options.method,
+    const cleanPath = path.split("?")[0];
+    const authHeader = this.createAuthHeader(method,
       cleanPath,
-      options.method === "GET" || options.method === "DELETE" ? null : input);
+      method === "GET" || method === "DELETE" ? null : input);
 
-    options.hostname = this.config.getHostname();
-    options.port = this.config.getPortNumber();
-    options.headers = {};
+    const headers: Record<string, string | number> = {};
+    headers["Authorization"] = authHeader;
 
-    options.headers["Authorization"] = authHeader;
-
-    let isempty = ["undefined", "null"];
+    const isempty = ["undefined", "null"];
     if (this.auth.merchantId && !isempty.includes(this.auth.merchantId)) {
-      options.headers["X-ASSUME-MERCHANT"] = this.auth.merchantId;
+      headers["X-ASSUME-MERCHANT"] = this.auth.merchantId;
     }
 
-
-    if (options.method === "POST") {
-      options.headers["Content-Type"] = "application/json";
-      options.headers["Content-Length"] = Buffer.byteLength(JSON.stringify(input));
+    if (method === "POST") {
+      input.requestedAt = Math.round(new Date().getTime() / 1000);
+      headers["Content-Type"] = "application/json";
+      headers["Content-Length"] = Buffer.byteLength(JSON.stringify(input));
     }
 
-    this.persistedHttpsOptions = options;
+    return {
+      apiKey: this.config.getApiKey(nameApi, nameMethod),
+      hostname: this.config.getHostname(),
+      port: this.config.getPortNumber(),
+      headers,
+      path,
+      method,
+    };
+  }
 
-    return options;
+  private invokeMethod(nameApi: string, nameMethod: string, payload: unknown, callback: HttpsClientMessage) {
+    const options = this.paypaySetupOptions(nameApi, nameMethod, payload);
+    httpsClient.httpsCall(options, payload, (result) => callback(result));
   }
 
   /**
@@ -118,9 +119,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public createPayment = (payload: any, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "CREATE_PAYMENT", payload), payload, (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "CREATE_PAYMENT", payload, callback);
   }
 
   /**
@@ -130,9 +129,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public qrCodeCreate = (payload: any, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "QRCODE_CREATE", payload), payload, (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "QRCODE_CREATE", payload, callback);
   }
 
   /**
@@ -142,9 +139,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of codeId : QR Code that is to be deleted
    */
   public qrCodeDelete = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "QRCODE_DELETE", inputParams), "", (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "QRCODE_DELETE", inputParams, callback);
   }
 
   /**
@@ -155,9 +150,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public getCodePaymentDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "GET_CODE_PAYMENT_DETAILS", inputParams), "", (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "GET_CODE_PAYMENT_DETAILS", inputParams, callback);
   }
 
   /**
@@ -168,9 +161,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public getPaymentDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "GET_PAYMENT_DETAILS", inputParams), "", (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "GET_PAYMENT_DETAILS", inputParams, callback);
   }
 
   /**
@@ -182,9 +173,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public paymentCancel = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "CANCEL_PAYMENT", inputParams), "", (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "CANCEL_PAYMENT", inputParams, callback);
   }
 
   /**
@@ -196,9 +185,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public paymentAuthCapture = (payload: any, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "PAYMENT_AUTH_CAPTURE", payload), payload, (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "PAYMENT_AUTH_CAPTURE", payload, callback);
   }
 
   /**
@@ -210,9 +197,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public paymentAuthRevert = (payload: any, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "PAYMENT_AUTH_REVERT", payload), payload, (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "PAYMENT_AUTH_REVERT", payload, callback);
   }
 
   /**
@@ -223,9 +208,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public paymentRefund = (payload: any, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "REFUND_PAYMENT", payload), payload, (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "REFUND_PAYMENT", payload, callback);
   }
 
   /**
@@ -236,9 +219,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public getRefundDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "GET_REFUND_DETAILS", inputParams), "", (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "GET_REFUND_DETAILS", inputParams, callback);
   }
 
   /**
@@ -250,9 +231,7 @@ class PayPayRestSDK {
    * @param {Array} inputParams  Array of userAuthorizationId, amount, currency, productType
    */
   public checkUserWalletBalance = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_WALLET", "CHECK_BALANCE", inputParams), "", (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_WALLET", "CHECK_BALANCE", inputParams, callback);
   }
 
   /**
@@ -263,9 +242,7 @@ class PayPayRestSDK {
    * @param {Array} inputParams  Array of apiKey, jwtToken
    */
   public authorization = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_DIRECT_DEBIT", "AUTHORIZATION", inputParams), "", (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_DIRECT_DEBIT", "AUTHORIZATION", inputParams, callback);
   }
 
   /**
@@ -276,9 +253,7 @@ class PayPayRestSDK {
    * @param {Array} inputParams  Array of apiKey, jwtToken
    */
   public authorizationResult = (inputParams: Array<string | number>, callback: HttpsClientMessage) => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_DIRECT_DEBIT", "AUTHORIZATION_RESULT", inputParams), "", (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_DIRECT_DEBIT", "AUTHORIZATION_RESULT", inputParams, callback);
   }
 
   /**
@@ -288,9 +263,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public accountLinkQRCodeCreate = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_ACCOUNT_LINK", "QRCODE_CREATE", payload), payload, (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_ACCOUNT_LINK", "QRCODE_CREATE", payload, callback);
   }
 
   /**
@@ -304,15 +277,11 @@ class PayPayRestSDK {
   }
 
   public paymentPreauthorize = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "PREAUTHORIZE", payload), payload, (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_PAYMENT", "PREAUTHORIZE", payload, callback);
   }
 
   public paymentSubscription = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_SUBSCRIPTION", "PAYMENTS", payload), payload, (result: any) => {
-      callback(result);
-    });
+    this.invokeMethod("API_SUBSCRIPTION", "PAYMENTS", payload, callback);
   }
 
   /**
@@ -323,9 +292,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public createPendingPayment = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_REQUEST_ORDER", "PENDING_PAYMENT_CREATE", payload), payload, (result: any) => {
-      callback(result);
-    })
+    this.invokeMethod("API_REQUEST_ORDER", "PENDING_PAYMENT_CREATE", payload, callback);
   }
 
   /**
@@ -336,9 +303,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public getPendingPaymentDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_REQUEST_ORDER", "GET_ORDER_DETAILS", inputParams), "", (result: any) => {
-      callback(result);
-    })
+    this.invokeMethod("API_REQUEST_ORDER", "GET_ORDER_DETAILS", inputParams, callback);
   }
 
   /**
@@ -349,9 +314,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of merchantPaymentId : The unique payment transaction id provided by merchant
    */
   public cancelPendingOrder = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_REQUEST_ORDER", "PENDING_ORDER_CANCEL", inputParams), "", (result: any) => {
-      callback(result);
-    })
+    this.invokeMethod("API_REQUEST_ORDER", "PENDING_ORDER_CANCEL", inputParams, callback);
   }
 
   /**
@@ -362,9 +325,7 @@ class PayPayRestSDK {
    * @param {Object} payload  JSON object payload
    */
   public refundPendingPayment = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "REFUND_PAYMENT", payload), payload, (result: any) => {
-      callback(result);
-    })
+    this.invokeMethod("API_PAYMENT", "REFUND_PAYMENT", payload, callback);
   }
 
   /**
@@ -375,9 +336,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    */
   public getUserAuthorizationStatus = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("USER_AUTHORIZATION", "GET_USER_AUTHORIZATION_STATUS", inputParams), "", (result: any) => {
-      callback(result);
-    })
+    this.invokeMethod("USER_AUTHORIZATION", "GET_USER_AUTHORIZATION_STATUS", inputParams, callback);
   }
 
   /**
@@ -388,9 +347,7 @@ class PayPayRestSDK {
    * @param {string} inputParams  Array of UserAuthorizationId : The unique UserAuthorizationId id 
    */
   public unlinkUser = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("USER_AUTHORIZATION", "UNLINK_USER", inputParams), "", (result: any) => {
-      callback(result);
-    })
+    this.invokeMethod("USER_AUTHORIZATION", "UNLINK_USER", inputParams, callback);
   }
 
   /**
@@ -403,9 +360,7 @@ class PayPayRestSDK {
     * @param callback 
     */
   public cashBack = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "GIVE_CASH_BACK", payload), payload, (result: any) => {
-      callback(result);
-    })
+    this.invokeMethod("API_PAYMENT", "GIVE_CASH_BACK", payload, callback);
   }
 
   /**
@@ -418,9 +373,7 @@ class PayPayRestSDK {
    * @param callback 
    */
   public getCashBackDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "CHECK_CASHBACK_DETAILS", inputParams), "", (result: any) => {
-      callback(result);
-    })
+    this.invokeMethod("API_PAYMENT", "CHECK_CASHBACK_DETAILS", inputParams, callback);
   }
 
   /**
@@ -433,9 +386,7 @@ class PayPayRestSDK {
    * @param callback 
    */
   public reverseCashBack = (payload: any, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "REVERSAL_CASHBACK", payload), payload, (result: any) => {
-      callback(result);
-    })
+    this.invokeMethod("API_PAYMENT", "REVERSAL_CASHBACK", payload, callback);
   }
 
   /**
@@ -448,9 +399,7 @@ class PayPayRestSDK {
    * @param callback 
    */
   public getReverseCashBackDetails = (inputParams: Array<string | number>, callback: HttpsClientMessage): void => {
-    httpsClient.httpsCall(this.paypaySetupOptions("API_PAYMENT", "CHECK_CASHBACK_REVERSE_DETAILS", inputParams), "", (result: any) => {
-      callback(result);
-    })
+    this.invokeMethod("API_PAYMENT", "CHECK_CASHBACK_REVERSE_DETAILS", inputParams, callback);
   }
 
 }

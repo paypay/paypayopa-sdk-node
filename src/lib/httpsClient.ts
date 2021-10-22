@@ -19,7 +19,7 @@ export class HttpsClient {
 
   httpsCall(
     options: https.RequestOptions & { apiKey?: string },
-    payload = "",
+    payload: any = "",
     callback: HttpsClientMessage,
   ) {
     let body = "";
