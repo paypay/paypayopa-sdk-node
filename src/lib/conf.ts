@@ -29,15 +29,15 @@ export class Conf {
     }
   }
 
-  getHttpsMethod(nameApi: any, nameMethod: any): any {
+  getHttpsMethod(nameApi: string, nameMethod: string): string {
     return this.configLookup[nameApi][nameMethod].METHOD;
   }
 
-  getHttpsPath(nameApi: string | number, nameMethod: string | number) {
+  getHttpsPath(nameApi: string, nameMethod: string): string {
     return this.configLookup[nameApi][nameMethod].PATH;
   }
 
-  getApiKey(nameApi: string | number, nameMethod: string | number) {
+  getApiKey(nameApi: string, nameMethod: string): string | undefined {
     return this.configLookup[nameApi][nameMethod].API_NAME;
   }
 
