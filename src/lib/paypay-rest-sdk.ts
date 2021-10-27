@@ -116,10 +116,10 @@ class PayPayRestSDK {
     };
   }
 
-  private getEndpoint = (nameApi: string, nameMethod: string): Endpoint => {
+  private getEndpoint = (nameApi: string, nameMethod: string, pathSuffix = ""): Endpoint => {
     return {
       method: this.config.getHttpsMethod(nameApi, nameMethod),
-      path: this.config.getHttpsPath(nameApi, nameMethod),
+      path: this.config.getHttpsPath(nameApi, nameMethod) + pathSuffix,
       apiKey: this.config.getApiKey(nameApi, nameMethod),
     };
   }
@@ -148,14 +148,12 @@ class PayPayRestSDK {
    * @param {Callback} [callback] (Optional) The callback to invoke when a response is received.
    */
   public createPayment = (
-    ...args: [payload: any, callback?: HttpsClientMessage]
-      | [payload: any, agreeSimilarTransaction: boolean, callback?: HttpsClientMessage]
+    payload: any,
+    ...args: [callback?: HttpsClientMessage] | [agreeSimilarTransaction: boolean, callback?: HttpsClientMessage]
   ) => {
-    const payload = args[0];
-    const agreeSimilarTransaction = args[1] === true;
-    const callback = typeof args[1] === "boolean" ? args[2] : args[1];
-    const endpoint = this.getEndpoint("API_PAYMENT", "CREATE_PAYMENT");
-    endpoint.path += "?agreeSimilarTransaction=" + agreeSimilarTransaction;
+    const agreeSimilarTransaction = args[0] === true;
+    const callback = typeof args[0] === "boolean" ? args[1] : args[0];
+    const endpoint = this.getEndpoint("API_PAYMENT", "CREATE_PAYMENT", `?agreeSimilarTransaction=${agreeSimilarTransaction}`);
     return this.invokeMethod(endpoint, payload, callback);
   }
 
@@ -314,14 +312,12 @@ class PayPayRestSDK {
   }
 
   public paymentPreauthorize = (
-    ...args: [payload: any, callback?: HttpsClientMessage]
-      | [payload: any, agreeSimilarTransaction: boolean, callback?: HttpsClientMessage]
+    payload: any,
+    ...args: [callback?: HttpsClientMessage] | [agreeSimilarTransaction: boolean, callback?: HttpsClientMessage]
   ) => {
-    const payload = args[0];
-    const agreeSimilarTransaction = args[1] === true;
-    const callback = typeof args[1] === "boolean" ? args[2] : args[1];
-    const endpoint = this.getEndpoint("API_PAYMENT", "PREAUTHORIZE");
-    endpoint.path += "?agreeSimilarTransaction=" + agreeSimilarTransaction;
+    const agreeSimilarTransaction = args[0] === true;
+    const callback = typeof args[0] === "boolean" ? args[1] : args[0];
+    const endpoint = this.getEndpoint("API_PAYMENT", "PREAUTHORIZE", `?agreeSimilarTransaction=${agreeSimilarTransaction}`);
     return this.invokeMethod(endpoint, payload, callback);
   }
 
