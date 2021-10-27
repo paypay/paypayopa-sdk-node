@@ -121,12 +121,15 @@ class PayPayRestSDK {
     };
   }
 
-  private invokeMethod = (endpoint: Endpoint, payload: unknown, callback?: HttpsClientMessage): Promise<HttpsClientSuccess | HttpsClientError> => {
+  private invokeMethod = (
+    endpoint: Endpoint,
+    payload: unknown,
+    callback?: HttpsClientMessage): Promise<HttpsClientSuccess | HttpsClientError> => {
     const options = this.paypaySetupOptions(endpoint, payload);
     return new Promise((resolve) => {
       httpsClient.httpsCall(options, payload, (result) => {
         resolve(result);
-        if (callback) {
+        if (callback !== undefined) {
           callback(result);
         }
       });
@@ -138,6 +141,8 @@ class PayPayRestSDK {
    * @callback                Callback function to handle result
    * @returns {Promise}       Promise resolving to object containing STATUS and BODY
    * @param {Object} payload  JSON object payload
+   * @param {boolean} [agreeSimilarTransaction] (Optional) If set to "true", the payment duplication check will be bypassed.
+   * @param {Callback} [callback] (Optional) The callback to invoke when a response is received.
    */
   public createPayment = (
     ...args: [payload: any, callback?: HttpsClientMessage]
@@ -305,8 +310,16 @@ class PayPayRestSDK {
     return jwt.verify(token, Buffer.from(clientSecret, "base64"));
   }
 
-  public paymentPreauthorize = (payload: any, callback?: HttpsClientMessage) => {
-    return this.invokeMethod(this.getEndpoint("API_PAYMENT", "PREAUTHORIZE"), payload, callback);
+  public paymentPreauthorize = (
+    ...args: [payload: any, callback?: HttpsClientMessage]
+      | [payload: any, agreeSimilarTransaction: boolean, callback?: HttpsClientMessage]
+  ) => {
+    const payload = args[0];
+    const agreeSimilarTransaction = args[1] === true;
+    const callback = typeof args[1] === "boolean" ? args[2] : args[1];
+    const endpoint = this.getEndpoint("API_PAYMENT", "PREAUTHORIZE");
+    endpoint.path += "?agreeSimilarTransaction=" + agreeSimilarTransaction;
+    return this.invokeMethod(endpoint, payload, callback);
   }
 
   public paymentSubscription = (payload: any, callback?: HttpsClientMessage) => {
