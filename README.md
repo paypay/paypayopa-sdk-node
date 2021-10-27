@@ -473,7 +473,7 @@ let merchantPaymentId = 'merchantRefundId'
 const response = await PAYPAY.GetRefundDetails([merchantRefundId]);
 const body = JSON.parse(response.BODY);
 // Printing if the method call was SUCCESS
-console.log(response.BODY.resultInfo.code);
+console.log(body.resultInfo.code);
 ```
 Did you get **SUCCESS** in the print statement above, if yes then the API execution has happen correctly.
 

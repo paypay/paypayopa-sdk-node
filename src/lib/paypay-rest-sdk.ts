@@ -46,27 +46,27 @@ class PayPayRestSDK {
     const epoch = Math.floor(Date.now() / 1000);
     const nonce = uuidv4();
 
-    let contentType = "application/json";
-    let payload = JSON.stringify(body);
-    const isempty = ["", "undefined", "null"];
+    const jsonified = JSON.stringify(body);
+    const isempty = [undefined, null, "", "undefined", "null"];
 
-    if (isempty.includes(payload)) {
+    let contentType;
+    let payloadDigest;
+    if (isempty.includes(jsonified)) {
       contentType = "empty";
-      payload = "empty";
+      payloadDigest = "empty";
     } else {
-      let md5 = algo.MD5.create();
-      md5.update(contentType);
-      md5.update(payload);
-      payload = md5
+      contentType = "application/json";
+      payloadDigest = algo.MD5.create()
+        .update(contentType)
+        .update(jsonified)
         .finalize()
-        .toString(enc.Base64)
-        .toString();
+        .toString(enc.Base64);
     }
-    const signatureRawList = [resourceUrl, method, nonce, epoch, contentType, payload];
+    const signatureRawList = [resourceUrl, method, nonce, epoch, contentType, payloadDigest];
     const signatureRawData = signatureRawList.join("\n");
     const hashed = HmacSHA256(signatureRawData, this.auth.clientSecret);
     const hashed64 = enc.Base64.stringify(hashed);
-    const headList = [this.auth.clientId, hashed64, nonce, epoch, payload];
+    const headList = [this.auth.clientId, hashed64, nonce, epoch, payloadDigest];
     const header = headList.join(":");
     return `hmac OPA-Auth:${header}`;
   }

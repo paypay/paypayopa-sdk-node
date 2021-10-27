@@ -34,11 +34,15 @@ export class HttpsClient {
       });
       res.on("end", () => {
         if (status < 200 || status > 299) {
-          const parseBody = JSON.parse(body);
-          const code = parseBody.resultInfo.code;
-          const codeId = parseBody.resultInfo.codeId;
-          const RESOLVE_URL = `https://developer.paypay.ne.jp/develop/resolve?api_name=${apiName}&code=${code}&code_id=${codeId}`;
-          console.log(`This link should help you to troubleshoot the error: ${RESOLVE_URL}`);
+          try {
+            const parseBody = JSON.parse(body);
+            const code = parseBody.resultInfo.code;
+            const codeId = parseBody.resultInfo.codeId;
+            const RESOLVE_URL = `https://developer.paypay.ne.jp/develop/resolve?api_name=${apiName}&code=${code}&code_id=${codeId}`;
+            console.log(`This link should help you to troubleshoot the error: ${RESOLVE_URL}`);
+          } catch (e) {
+            console.log(`The response to ${apiName} with status ${status} had an unexpected form`);
+          }
         }
         callback({ STATUS: status, BODY: body });
       });
