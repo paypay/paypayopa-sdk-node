@@ -71,18 +71,21 @@ class PayPayRestSDK {
     return `hmac OPA-Auth:${header}`;
   }
 
-  private paypaySetupOptions = (endpoint: Endpoint, input: any) => {
-    let path = endpoint.path;
-    const method = endpoint.method;
-
-    if (method === "GET" || method === "DELETE") {
-      const queryParams = path.match(/{\w+}/g);
-      if (queryParams) {
-        queryParams.forEach((q: any, n: string | number) => {
-          path = path.replace(q, input[n]);
-        });
-      }
+  private fillPathTemplate(template: string, input: any[]) {
+    const queryParams = template.match(/{\w+}/g);
+    if (queryParams) {
+      queryParams.forEach((q, n) => {
+        template = template.replace(q, input[n]);
+      });
     }
+    return template;
+  }
+
+  private paypaySetupOptions = (endpoint: Endpoint, input: any) => {
+    const method = endpoint.method;
+    const path = (method === "GET" || method === "DELETE")
+      ? this.fillPathTemplate(endpoint.path, input)
+      : endpoint.path;
 
     const headers: Record<string, string | number> = {};
 
