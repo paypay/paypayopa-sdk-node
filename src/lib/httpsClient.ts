@@ -19,9 +19,13 @@ export class HttpsClient {
 
   httpsCall(
     options: https.RequestOptions & { apiKey?: string },
-    payload: any = "",
+    payload: any,
     callback: HttpsClientMessage,
   ) {
+    if (payload === undefined) {
+      payload = "";
+    }
+
     let body = "";
     let status: number;
     const apiName = options.apiKey;
