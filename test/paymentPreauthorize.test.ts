@@ -11,7 +11,7 @@ const conf = {
 
 payPayRestSDK.configure(conf);
 
-test('Unit Test - Create Payment', async () => {
+test('Unit Test - Preauthorize Payment', async () => {
 
     const payload = {
         "merchantPaymentId": uuidv4(),
@@ -27,7 +27,7 @@ test('Unit Test - Create Payment', async () => {
         "resultInfo": { "code": "SUCCESS", "message": "Success", "codeId": "08100001" },
         "data": {
             "paymentId": "1609155081",
-            "status": "COMPLETED",
+            "status": "AUTHORIZED",
             "acceptedAt": 1609155081,
             "merchantPaymentId": "testId",
             "userAuthorizationId": "1609155081",
@@ -39,25 +39,25 @@ test('Unit Test - Create Payment', async () => {
             "assumeMerchant": "1609155081"
         }
     }
-    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
 
     const mockHttpsCall = jest.spyOn(httpsClient, 'httpsCall');
     mockHttpsCall.mockImplementation(jest.fn((_options: any, _payload = '', _callback: any) => {
-        _callback(expected);
+        _callback({ STATUS: 200, BODY: JSON.stringify(response) });
     }));
 
-    const promiseResult = await payPayRestSDK.createPayment(payload, (result: any) => {
+    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
+    const promiseResult = await payPayRestSDK.paymentPreauthorize(payload, (result: any) => {
         expect(result).toEqual(expected);
     });
-    expect(promiseResult).toEqual(expected)
+    expect(promiseResult).toEqual(expected);
 
     expect(mockHttpsCall).toHaveBeenCalledTimes(1);
-    expect(mockHttpsCall).toHaveBeenCalledWith(expect.objectContaining({ path: "/v2/payments?agreeSimilarTransaction=false" }), payload, expect.anything());
+    expect(mockHttpsCall).toHaveBeenCalledWith(expect.objectContaining({ path: "/v2/payments/preauthorize?agreeSimilarTransaction=false" }), payload, expect.anything());
 
     mockHttpsCall.mockClear();
 });
 
-test('Unit Test - Create Payment with agreeSimilarTransaction=false', async () => {
+test('Unit Test - Preauthorize Payment with agreeSimilarTransaction=false', async () => {
 
     const payload = {
         "merchantPaymentId": uuidv4(),
@@ -73,7 +73,7 @@ test('Unit Test - Create Payment with agreeSimilarTransaction=false', async () =
         "resultInfo": { "code": "SUCCESS", "message": "Success", "codeId": "08100001" },
         "data": {
             "paymentId": "1609155081",
-            "status": "COMPLETED",
+            "status": "AUTHORIZED",
             "acceptedAt": 1609155081,
             "merchantPaymentId": "testId",
             "userAuthorizationId": "1609155081",
@@ -85,25 +85,25 @@ test('Unit Test - Create Payment with agreeSimilarTransaction=false', async () =
             "assumeMerchant": "1609155081"
         }
     }
-    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
 
     const mockHttpsCall = jest.spyOn(httpsClient, 'httpsCall');
     mockHttpsCall.mockImplementation(jest.fn((_options: any, _payload = '', _callback: any) => {
-        _callback(expected);
+        _callback({ STATUS: 200, BODY: JSON.stringify(response) });
     }));
 
-    const promiseResult = await payPayRestSDK.createPayment(payload, false, (result: any) => {
+    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
+    const promiseResult = await payPayRestSDK.paymentPreauthorize(payload, false, (result: any) => {
         expect(result).toEqual(expected);
     });
-    expect(promiseResult).toEqual(expected)
+    expect(promiseResult).toEqual(expected);
 
     expect(mockHttpsCall).toHaveBeenCalledTimes(1);
-    expect(mockHttpsCall).toHaveBeenCalledWith(expect.objectContaining({ path: "/v2/payments?agreeSimilarTransaction=false" }), payload, expect.anything());
+    expect(mockHttpsCall).toHaveBeenCalledWith(expect.objectContaining({ path: "/v2/payments/preauthorize?agreeSimilarTransaction=false" }), payload, expect.anything());
 
     mockHttpsCall.mockClear();
 });
 
-test('Unit Test - Create Payment with agreeSimilarTransaction=true', async () => {
+test('Unit Test - Preauthorize Payment with agreeSimilarTransaction=true', async () => {
 
     const payload = {
         "merchantPaymentId": uuidv4(),
@@ -119,7 +119,7 @@ test('Unit Test - Create Payment with agreeSimilarTransaction=true', async () =>
         "resultInfo": { "code": "SUCCESS", "message": "Success", "codeId": "08100001" },
         "data": {
             "paymentId": "1609155081",
-            "status": "COMPLETED",
+            "status": "AUTHORIZED",
             "acceptedAt": 1609155081,
             "merchantPaymentId": "testId",
             "userAuthorizationId": "1609155081",
@@ -131,20 +131,20 @@ test('Unit Test - Create Payment with agreeSimilarTransaction=true', async () =>
             "assumeMerchant": "1609155081"
         }
     }
-    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
 
     const mockHttpsCall = jest.spyOn(httpsClient, 'httpsCall');
     mockHttpsCall.mockImplementation(jest.fn((_options: any, _payload = '', _callback: any) => {
-        _callback(expected);
+        _callback({ STATUS: 200, BODY: JSON.stringify(response) });
     }));
 
-    const promiseResult = await payPayRestSDK.createPayment(payload, true, (result: any) => {
+    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
+    const promiseResult = await payPayRestSDK.paymentPreauthorize(payload, true, (result: any) => {
         expect(result).toEqual(expected);
     });
-    expect(promiseResult).toEqual(expected)
+    expect(promiseResult).toEqual(expected);
 
     expect(mockHttpsCall).toHaveBeenCalledTimes(1);
-    expect(mockHttpsCall).toHaveBeenCalledWith(expect.objectContaining({ path: "/v2/payments?agreeSimilarTransaction=true" }), payload, expect.anything());
+    expect(mockHttpsCall).toHaveBeenCalledWith(expect.objectContaining({ path: "/v2/payments/preauthorize?agreeSimilarTransaction=true" }), payload, expect.anything());
 
     mockHttpsCall.mockClear();
 });
