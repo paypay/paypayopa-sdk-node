@@ -373,6 +373,44 @@ console.log(body.resultInfo.code);
 
 Did you get **SUCCESS** in the print statement above, if yes then the API execution has happened correctly.
 
+An optional parameter follows the payload argument to specify the `agreeSimilarTransaction` parameter, which bypasses the payment duplication check.
+
+```javascript
+
+// Create a payment.
+const response1 = await PAYPAY.CreatePayment(payload, false);
+
+// Attempt to create a second payment with the same amount and a different `merchantPaymentId`:
+const response2 = await PAYPAY.CreatePayment({...payload, merchantPaymentId: "second-payment-" + Date.now()});
+console.log(response2.BODY);
+// The request was rejected as a suspected duplicate payment:
+//   {
+//     resultInfo: {
+//       code: 'SUSPECTED_DUPLICATE_PAYMENT',
+//       message: 'Order is rejected since similar order has been already accepted',
+//       codeId: '00200017'
+//     },
+//     data: null
+//   }
+
+// Attempt again, this time using agreeSimilarTransaction=true.
+const response3 = await PAYPAY.CreatePayment({...payload, merchantPaymentId: "second-payment-" + Date.now()}, true);
+console.log(response3.BODY);
+// The request was accepted because of the agreeSimilarTransaction=true parameter:
+//   {
+//     resultInfo: { code: 'SUCCESS', message: 'Success', codeId: '08100001' },
+//     data: {
+//       paymentId: '12345678901234567890',
+//       status: 'COMPLETED',
+//       acceptedAt: 1641234567,
+//       merchantPaymentId: 'second-payment-1641234500',
+//       userAuthorizationId: 'abcdef00-1234-5678-90ab-cdefabcd0123',
+//       amount: { amount: 100, currency: 'JPY' },
+//       requestedAt: 1641234567
+//     }
+//   }
+```
+
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/direct_debit#operation/createPayment)
 
 
