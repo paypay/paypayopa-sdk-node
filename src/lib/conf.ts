@@ -1,5 +1,5 @@
 import * as pathConfig from "./conf.path.json";
-import {HOST_PATH} from "./constants";
+import { HOST_PATH } from "./constants";
 
 export interface Config {
   PORT_NUMBER?: number;
@@ -13,8 +13,6 @@ export interface Config {
 }
 
 export class Conf {
-  options: { [k: string]: any } = {};
-
   private readonly pathConfig: Config = pathConfig;
 
   private readonly configLookup: any;
@@ -31,23 +29,15 @@ export class Conf {
     }
   }
 
-  setHttpsOptions(options: any) {
-    this.options = options;
-  }
-
-  getHttpsOptions() {
-    return this.options;
-  }
-
-  getHttpsMethod(nameApi: any, nameMethod: any): any {
+  getHttpsMethod(nameApi: string, nameMethod: string): string {
     return this.configLookup[nameApi][nameMethod].METHOD;
   }
 
-  getHttpsPath(nameApi: string | number, nameMethod: string | number) {
+  getHttpsPath(nameApi: string, nameMethod: string): string {
     return this.configLookup[nameApi][nameMethod].PATH;
   }
 
-  getApiKey(nameApi: string | number, nameMethod: string | number) {
+  getApiKey(nameApi: string, nameMethod: string): string | undefined {
     return this.configLookup[nameApi][nameMethod].API_NAME;
   }
 

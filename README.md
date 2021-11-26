@@ -81,7 +81,6 @@ In order to receive payments using this flow, first of all you will need to crea
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/dynamicqrcode#operation/createQRCode)
 
 ```javascript
-'use strict';
 let payload = {
     merchantPaymentId: "my_payment_id",
     amount: {
@@ -96,12 +95,12 @@ let payload = {
     userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 10_3 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) CriOS/56.0.2924.75 Mobile/14E5239e Safari/602.1"
 };
 
-PAYPAY.QRCodeCreate(payload, (response) => {
-    console.log(response.BODY.resultInfo.code);
-});
+const response = await PAYPAY.QRCodeCreate(payload);
+const body = JSON.parse(response.BODY);
+console.log(response.STATUS, body.resultInfo.code);
 ```
 
-Did you get a **HTTP 201** response, if yes then you are all set for the next step.
+Did you get a `200 SUCCESS` response, if yes then you are all set for the next step.
 
 <hr>
 
@@ -116,10 +115,11 @@ Now that you have created a Code, the next  step is to implement polling to get 
 ### Fetch a particular QR CODE payment details
 ```javascript
 let merchantPaymentId = 'merchantPaymentId';
-PAYPAY.GetCodePaymentDetails(Array(merchantPaymentId), (response) => {
-    console.log(response.BODY.resultInfo.code);
-    console.log(response.BODY.data.status);
-});
+
+const response = await PAYPAY.GetCodePaymentDetails([merchantPaymentId]);
+const body = JSON.parse(response.BODY);
+console.log(body.resultInfo.code);
+console.log(body.data.status);
 ```
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/jp/v1.0/dynamicqrcode#operation/getPaymentDetails)
 On successful payment, the status in the response will change to **COMPLETED**
@@ -138,9 +138,9 @@ Following are the important parameters that you can provide for this method:
 |codeId   |  Yes |string  |This is given as a response in the Create a QR Code method |
 
 ```javascript
-PAYPAY.QRCodeDelete(Array(codeId), (response) => {
-    console.log(response.BODY.resultInfo.code);
-});
+const response = await PAYPAY.QRCodeDelete([codeId]);
+const body = JSON.parse(response.BODY);
+console.log(body.resultInfo.code);
 ```
 
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/jp/v1.0/dynamicqrcode#operation/deleteQRCode)
@@ -161,9 +161,9 @@ Following are the important parameters that you can provide for this method:
 
 
 ```javascript
-PAYPAY.PaymentCancel(Array(merchantPaymentId), (response) => {
-    console.log(response.BODY.resultInfo.code);
-});
+const response = await PAYPAY.PaymentCancel([merchantPaymentId]);
+const body = JSON.parse(response.BODY);
+console.log(body.resultInfo.code);
 ```
 
 
@@ -179,7 +179,7 @@ So the user has decided to return the goods they have purchased and needs to be 
 |reason   |  No |integer <= 11 characters  |The reason for refund |
 
 ```javascript
- let payload = {
+let payload = {
     merchantRefundId: 'merchant_refund_id',
     paymentId: 'paypay_payment_id',
     amount: {
@@ -189,9 +189,9 @@ So the user has decided to return the goods they have purchased and needs to be 
     reason: 'reason for refund',
 };
 
-PAYPAY.PaymentRefund(payload, (response) => {
-    console.log(response.BODY.resultInfo.code);
-});
+const response = await PAYPAY.PaymentRefund(payload);
+const body = JSON.parse(response.BODY);
+console.log(body.resultInfo.code);
 ```
 
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/dynamicqrcode#operation/refundPayment). **Please note that currently we only support 1 refund per order.**
@@ -208,7 +208,7 @@ So you are implementing a PreAuth and Capture, and hence want to capture the pay
 |orderDescription   |Yes   |string <= 255 characters|Description of the Capture for the user|
 
 ```javascript
-  let payload = {
+let payload = {
     merchantPaymentId: 'merchant_payment_id',
     amount: {
         amount: 1,
@@ -219,9 +219,9 @@ So you are implementing a PreAuth and Capture, and hence want to capture the pay
     orderDescription: 'Order Shipped, Cake with toppings',
 };
 
-PAYPAY.PaymentAuthCapture(payload, (response) => {
-    console.log(response.BODY.resultInfo.code);
-});
+const response = await PAYPAY.PaymentAuthCapture(payload);
+const body = JSON.parse(response.BODY);
+console.log(body.resultInfo.code);
 ```
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/dynamicqrcode#operation/capturePaymentAuth).
 
@@ -242,9 +242,9 @@ let payload = {
     reason: 'reason for revert',
 };
 
-PAYPAY.PaymentAuthRevert(payload, (response) => {
-    console.log(response.BODY.resultInfo.code);
-});
+const response = await PAYPAY.PaymentAuthRevert(payload);
+const body = JSON.parse(response.BODY);
+console.log(body.resultInfo.code);
 ```
 For List of params refer to the API guide :
 https://www.paypay.ne.jp/opa/doc/v1.0/dynamicqrcode#operation/revertAuth
@@ -258,10 +258,10 @@ So you want to confirm the status of the refund, maybe because the request for t
 
 
 ```javascript
-let merchantPaymentId = 'merchantRefundId'
-PAYPAY.GetRefundDetails(Array(merchantRefundId), (response) => {
-    console.log(response.BODY.resultInfo.code);
-});
+let merchantPaymentId = 'merchantRefundId';
+const response = await PAYPAY.GetRefundDetails([merchantRefundId]);
+const body = JSON.parse(response.BODY);
+console.log(body.resultInfo.code);
 ```
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/dynamicqrcode#operation/getRefundDetails).
 
@@ -292,7 +292,7 @@ In order to acquire an authorization you need to create a JWT Token -
 |phoneNumber| no|	string| The user mobile phone number|
 
 ```javascript
-  let payload = {
+let payload = {
     scopes: [
         "direct_debit"
     ],
@@ -304,11 +304,13 @@ In order to acquire an authorization you need to create a JWT Token -
     deviceId: "device_id"
 };
 // Calling the method to create the account linking QR Code
-PAYPAY.AccountLinkQRCodeCreate(payload, (response) => {
-    // Printing if the method call was SUCCESS
-    console.log(response.BODY.resultInfo.code);
-    // Printing the link to the generated QR Code
-    console.log(response.BODY.data.linkQRCodeURL);
+const response = await PAYPAY.AccountLinkQRCodeCreate(payload);
+const body = JSON.parse(response.BODY);
+
+// Printing if the method call was SUCCESS
+console.log(body.resultInfo.code);
+// Printing the link to the generated QR Code
+console.log(body.data.linkQRCodeURL);
 });
 ```
 
@@ -329,11 +331,13 @@ const userAuthorizationId = jwtResponse["userAuthorizationId"];
 
 ```javascript
 // Calling the method to unlink a Payment
-PAYPAY.unlinkUser(userAuthorizationId,(result) => {
+const result = await PAYPAY.unlinkUser([userAuthorizationId]);
+const body = JSON.parse(result.BODY);
+
 // Printing if the method call was SUCCESS
-console.log(response.BODY.resultInfo.code);
-});
+console.log(body.resultInfo.code);
 ```
+
 Did you get SUCCESS in the print statement above, if yes then the API execution has happened correctly.
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/direct_debit#operation/unlinkUser).
 
@@ -358,14 +362,54 @@ let payload = {
     userAuthorizationId: "my_user_authorization_id",
     orderDescription: "Mune's Favourite Cake",
 };
-// Calling the method to create a qr code
-PAYPAY.CreatePayment(payload, (response) => {
+
+// Calling the method to create a payment
+const response = await PAYPAY.CreatePayment(payload);
+const body = JSON.parse(response.BODY);
+
 // Printing if the method call was SUCCESS
-    console.log(response.BODY.resultInfo.code);
-});
+console.log(body.resultInfo.code);
 ```
 
 Did you get **SUCCESS** in the print statement above, if yes then the API execution has happened correctly.
+
+An optional parameter follows the payload argument to specify the `agreeSimilarTransaction` parameter, which bypasses the payment duplication check.
+
+```javascript
+
+// Create a payment.
+const response1 = await PAYPAY.CreatePayment(payload, false);
+
+// Attempt to create a second payment with the same amount and a different `merchantPaymentId`:
+const response2 = await PAYPAY.CreatePayment({...payload, merchantPaymentId: "second-payment-" + Date.now()});
+console.log(response2.BODY);
+// The request was rejected as a suspected duplicate payment:
+//   {
+//     resultInfo: {
+//       code: 'SUSPECTED_DUPLICATE_PAYMENT',
+//       message: 'Order is rejected since similar order has been already accepted',
+//       codeId: '00200017'
+//     },
+//     data: null
+//   }
+
+// Attempt again, this time using agreeSimilarTransaction=true.
+const response3 = await PAYPAY.CreatePayment({...payload, merchantPaymentId: "second-payment-" + Date.now()}, true);
+console.log(response3.BODY);
+// The request was accepted because of the agreeSimilarTransaction=true parameter:
+//   {
+//     resultInfo: { code: 'SUCCESS', message: 'Success', codeId: '08100001' },
+//     data: {
+//       paymentId: '12345678901234567890',
+//       status: 'COMPLETED',
+//       acceptedAt: 1641234567,
+//       merchantPaymentId: 'second-payment-1641234500',
+//       userAuthorizationId: 'abcdef00-1234-5678-90ab-cdefabcd0123',
+//       amount: { amount: 100, currency: 'JPY' },
+//       requestedAt: 1641234567
+//     }
+//   }
+```
 
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/direct_debit#operation/createPayment)
 
@@ -379,12 +423,13 @@ Now that you have created a payment, in case the payment request timeout, you ca
 
 ```javascript
 let merchantPaymentId = 'merchantPaymentId';
-PAYPAY.GetPaymentDetails(Array(merchantPaymentId), (response) => {
-    // Printing if the method call was SUCCESS, this does not mean the payment was a success
-    console.log(response.BODY.resultInfo.code);
-    // Printing if the transaction status for the code has COMPLETED/ AUTHORIZED
-    console.log(response.BODY.data.status);
-});
+const response = await PAYPAY.GetPaymentDetails([merchantPaymentId]);
+const body = JSON.parse(response.BODY);
+
+// Printing if the method call was SUCCESS, this does not mean the payment was a success
+console.log(body.resultInfo.code);
+// Printing if the transaction status for the code has COMPLETED/AUTHORIZED
+console.log(body.data.status);
 ```
 
 Did you get **SUCCESS** in the print statement above, if yes then the API execution has happen correctly.
@@ -408,11 +453,10 @@ Following are the important parameters that you can provide for this method:
 |merchantPaymentId   |  Yes |string <= 64 characters  |The unique payment transaction id provided by merchant   |
 
 ```javascript
-PAYPAY.PaymentCancel(Array(merchantPaymentId), (response) => {
-    console.log(result);
-    // Printing if the method call was SUCCESS
-    console.log(response.BODY.resultInfo.code);
-});
+const response = await PAYPAY.PaymentCancel([merchantPaymentId]);
+const body = JSON.parse(response.BODY);
+// Printing if the method call was SUCCESS
+console.log(body.resultInfo.code);
 ```
 
 Did you get **SUCCESS** in the print statement above, if yes then the API execution has happend correctly.
@@ -441,9 +485,10 @@ So the user has decided to return the goods they have purchased and needs to be 
     reason: 'reason for refund',
 };
 // Calling the method to refund a Payment
-PAYPAY.PaymentRefund(payload, (response) => {
-    // Printing if the method call was SUCCESS
-    console.log(response.BODY.resultInfo.code);
+const response = await PAYPAY.PaymentRefund(payload);
+const body = JSON.parse(response.BODY);
+// Printing if the method call was SUCCESS
+console.log(body.resultInfo.code);
 });
 ```
 
@@ -463,10 +508,10 @@ So you want to confirm the status of the refund, maybe because the request for t
 
 ```javascript
 let merchantPaymentId = 'merchantRefundId'
-PAYPAY.GetRefundDetails(Array(merchantRefundId), (response) => {
-    // Printing if the method call was SUCCESS
-    console.log(response.BODY.resultInfo.code);
-});
+const response = await PAYPAY.GetRefundDetails([merchantRefundId]);
+const body = JSON.parse(response.BODY);
+// Printing if the method call was SUCCESS
+console.log(body.resultInfo.code);
 ```
 Did you get **SUCCESS** in the print statement above, if yes then the API execution has happen correctly.
 

@@ -4,7 +4,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      CC_TEST_REPORTER_ID: cbd6f734a0585395a1e664feb0be141affd12ea562966f98fa8f81d29e868e30
+      CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID}}
     strategy:
       matrix:
         node-version: [14.x, 12.x, 10.x]
