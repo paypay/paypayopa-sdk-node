@@ -16,10 +16,31 @@ jobs:
            ./cc-test-reporter before-build
 
     - name: Download coverage from CI run
-      uses: actions/download-artifact@v2
+      uses: actions/github-script@v3.1.0
       with:
-        name: coverage-lcov-14.x.info
-        path: artifacts/
+        script: |
+          const coverageArtifactName = "lcov-14.x";
+          var artifacts = await github.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: ${{github.event.workflow_run.id }},
+          });
+          var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+            return artifact.name == coverageArtifactName;
+          })[0];
+          if (!matchArtifact) {
+            console.error(artifacts);
+            throw new Error("did not find expected artifact `" + artifactName + "`");
+          }
+          var download = await github.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: matchArtifact.id,
+              archive_format: 'zip',
+          });
+          var fs = require('fs');
+          fs.writeFileSync('${{github.workspace}}/coverage-artifact.zip', Buffer.from(download.data));
+    - run: unzip coverage-artifact.zip -d coverage-artifact
 
     - name: Show structure
       run: ls -R
@@ -27,4 +48,4 @@ jobs:
     - name: codeclimate after-build
       env: 
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID}}
-      run: ./cc-test-reporter after-build artifacts/lcov.info --exit-code 0
+      run: ./cc-test-reporter after-build coverage-artifact/coverage/lcov.info --exit-code 0

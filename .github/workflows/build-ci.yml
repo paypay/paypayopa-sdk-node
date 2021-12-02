@@ -36,8 +36,9 @@ jobs:
     - name: Upload coverage GitHub artifact
       uses: actions/upload-artifact@v2
       with:
-        name: coverage-lcov-${{ matrix.node-version }}.info
-        path: ./coverage/lcov.info
+        # Consumed by the `build-ci-target.yml` `upload-codeclimate` job.
+        name: lcov-${{ matrix.node-version }}
+        path: ./coverage/
 
     - name: Upload coverall reports
       uses: coverallsapp/github-action@master
