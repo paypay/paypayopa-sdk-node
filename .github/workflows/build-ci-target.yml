@@ -49,4 +49,5 @@ jobs:
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID}}
         GIT_COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
         GIT_BRANCH: ${{ github.event.workflow_run.head_branch }}
-      run: ./cc-test-reporter after-build -t lcov coverage-artifact/coverage/lcov.info --exit-code 0
+      working-directory: ./coverage-artifact
+      run: ./cc-test-reporter after-build -t lcov --exit-code 0
