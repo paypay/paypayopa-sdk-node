@@ -44,9 +44,19 @@ jobs:
           fs.writeFileSync('${{github.workspace}}/coverage-artifact.zip', Buffer.from(download.data));
     - run: unzip -j coverage-artifact.zip lcov.info -d coverage
 
+    - name: Get commit time
+      id: get-commit-time
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const sha = "${{github.event.workflow_run.head_sha}}";
+          const commit = await github.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: sha});
+          return new Date(commit.data.author.date).getTime();
+
     - name: codeclimate after-build
       env: 
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID}}
         GIT_COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
         GIT_BRANCH: ${{ github.event.workflow_run.head_branch }}
+        GIT_COMMITTED_AT: $${{ steps.get-commit-time.outputs.result }}
       run: ./cc-test-reporter after-build -t lcov --exit-code 0
