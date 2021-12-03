@@ -48,4 +48,4 @@ jobs:
     - name: codeclimate after-build
       env: 
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID}}
-      run: ./cc-test-reporter after-build coverage-artifact/coverage/lcov.info --exit-code 0
+      run: ./cc-test-reporter after-build -t lcov coverage-artifact/coverage/lcov.info --exit-code 0
