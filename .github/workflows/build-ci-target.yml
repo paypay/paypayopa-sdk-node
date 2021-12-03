@@ -42,12 +42,11 @@ jobs:
           });
           var fs = require('fs');
           fs.writeFileSync('${{github.workspace}}/coverage-artifact.zip', Buffer.from(download.data));
-    - run: unzip coverage-artifact.zip -d coverage-artifact
+    - run: unzip -j coverage-artifact.zip lcov.info -d coverage
 
     - name: codeclimate after-build
       env: 
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID}}
         GIT_COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
         GIT_BRANCH: ${{ github.event.workflow_run.head_branch }}
-      working-directory: ./coverage-artifact
       run: ./cc-test-reporter after-build -t lcov --exit-code 0
