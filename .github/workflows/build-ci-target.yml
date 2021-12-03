@@ -45,6 +45,7 @@ jobs:
     - run: unzip -j coverage-artifact.zip lcov.info -d coverage
 
     - name: Get commit time
+      uses: actions/github-script@v3.1.0
       id: get-commit-time
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
