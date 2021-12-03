@@ -10,6 +10,8 @@ jobs:
     - name: codeclimate before-build
       env: 
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID}}
+        GIT_COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
+        GIT_BRANCH: ${{ github.event.workflow_run.head_branch }}
       run: |
            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
            chmod +x ./cc-test-reporter
@@ -42,10 +44,9 @@ jobs:
           fs.writeFileSync('${{github.workspace}}/coverage-artifact.zip', Buffer.from(download.data));
     - run: unzip coverage-artifact.zip -d coverage-artifact
 
-    - name: Show structure
-      run: ls -R
-
     - name: codeclimate after-build
       env: 
         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID}}
-      run: ./cc-test-reporter after-build coverage-artifact/coverage/lcov.info --exit-code 0
+        GIT_COMMIT_SHA: ${{ github.event.workflow_run.head_sha }}
+        GIT_BRANCH: ${{ github.event.workflow_run.head_branch }}
+      run: ./cc-test-reporter after-build -t lcov coverage-artifact/coverage/lcov.info --exit-code 0
