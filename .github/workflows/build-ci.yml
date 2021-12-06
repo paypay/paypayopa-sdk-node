@@ -29,9 +29,8 @@ jobs:
     - run: npm install
     - run: npm run build --if-present
     - run: npm test
-    - name: coveralls
-      run: yarn coveralls
-      continue-on-error: true
+    - name: Test coverage
+      run: yarn coverage
 
     - name: Upload coverage GitHub artifact
       uses: actions/upload-artifact@v2
