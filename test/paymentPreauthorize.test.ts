@@ -42,10 +42,10 @@ test('Unit Test - Preauthorize Payment', async () => {
 
     const mockHttpsCall = jest.spyOn(httpsClient, 'httpsCall');
     mockHttpsCall.mockImplementation(jest.fn((_options: any, _payload = '', _callback: any) => {
-        _callback({ STATUS: 200, BODY: JSON.stringify(response) });
+        _callback({ STATUS: 200, BODY: response });
     }));
 
-    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
+    const expected = { STATUS: 200, BODY: response };
     const promiseResult = await payPayRestSDK.paymentPreauthorize(payload, (result: any) => {
         expect(result).toEqual(expected);
     });
@@ -88,10 +88,10 @@ test('Unit Test - Preauthorize Payment with agreeSimilarTransaction=false', asyn
 
     const mockHttpsCall = jest.spyOn(httpsClient, 'httpsCall');
     mockHttpsCall.mockImplementation(jest.fn((_options: any, _payload = '', _callback: any) => {
-        _callback({ STATUS: 200, BODY: JSON.stringify(response) });
+        _callback({ STATUS: 200, BODY: response });
     }));
 
-    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
+    const expected = { STATUS: 200, BODY: response };
     const promiseResult = await payPayRestSDK.paymentPreauthorize(payload, false, (result: any) => {
         expect(result).toEqual(expected);
     });
@@ -134,10 +134,10 @@ test('Unit Test - Preauthorize Payment with agreeSimilarTransaction=true', async
 
     const mockHttpsCall = jest.spyOn(httpsClient, 'httpsCall');
     mockHttpsCall.mockImplementation(jest.fn((_options: any, _payload = '', _callback: any) => {
-        _callback({ STATUS: 200, BODY: JSON.stringify(response) });
+        _callback({ STATUS: 200, BODY: response });
     }));
 
-    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
+    const expected = { STATUS: 200, BODY: response };
     const promiseResult = await payPayRestSDK.paymentPreauthorize(payload, true, (result: any) => {
         expect(result).toEqual(expected);
     });

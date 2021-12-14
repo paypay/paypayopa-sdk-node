@@ -2,7 +2,7 @@ import * as https from "https";
 
 export interface HttpsClientSuccess {
   STATUS: number;
-  BODY: string;
+  BODY: object | null;
 }
 
 export interface HttpsClientError {
@@ -52,7 +52,20 @@ export class HttpsClient {
         if (status < 200 || status > 299) {
           this.printDebugMessage(status, body, apiName);
         }
-        callback({ STATUS: status, BODY: body });
+        let parsed;
+        try {
+          parsed = body.match(/\S/) ? JSON.parse(body) : null;
+        } catch (e: any) {
+          callback({ STATUS: 500, ERROR: e.message });
+          return;
+        }
+
+        // Make the `BODY.toString()` return the raw JSON.
+        // This makes the library compatible with calls like `JSON.parse(response.BODY)`,
+        // which were required prior to version 2.
+        const responseObject = parsed && Object.assign(Object.create({ toString() { return body; } }), parsed);
+
+        callback({ STATUS: status, BODY: responseObject });
       });
     });
 

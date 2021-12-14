@@ -39,7 +39,7 @@ test('Unit Test - Create Payment', async () => {
             "assumeMerchant": "1609155081"
         }
     }
-    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
+    const expected = { STATUS: 200, BODY: response };
 
     const mockHttpsCall = jest.spyOn(httpsClient, 'httpsCall');
     mockHttpsCall.mockImplementation(jest.fn((_options: any, _payload = '', _callback: any) => {
@@ -85,7 +85,7 @@ test('Unit Test - Create Payment with agreeSimilarTransaction=false', async () =
             "assumeMerchant": "1609155081"
         }
     }
-    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
+    const expected = { STATUS: 200, BODY: response };
 
     const mockHttpsCall = jest.spyOn(httpsClient, 'httpsCall');
     mockHttpsCall.mockImplementation(jest.fn((_options: any, _payload = '', _callback: any) => {
@@ -131,7 +131,7 @@ test('Unit Test - Create Payment with agreeSimilarTransaction=true', async () =>
             "assumeMerchant": "1609155081"
         }
     }
-    const expected = { STATUS: 200, BODY: JSON.stringify(response) };
+    const expected = { STATUS: 200, BODY: response };
 
     const mockHttpsCall = jest.spyOn(httpsClient, 'httpsCall');
     mockHttpsCall.mockImplementation(jest.fn((_options: any, _payload = '', _callback: any) => {
