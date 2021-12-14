@@ -1,4 +1,6 @@
-import { httpsClient } from "../src/lib/httpsClient";
+import { HttpsClient } from "../src/lib/httpsClient";
+
+const httpsClient = new HttpsClient();
 
 jest.mock("https", () => ({
     __esModule: true,

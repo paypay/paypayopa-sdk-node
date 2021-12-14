@@ -1,5 +1,5 @@
 import { payPayRestSDK } from "../src/lib/paypay-rest-sdk";
-import { httpsClient } from '../src/lib/httpsClient';
+import { HttpsClient } from '../src/lib/httpsClient';
 
 const conf = {
     clientId: '5345435fsdfsr54353454',
@@ -9,6 +9,9 @@ const conf = {
 };
 
 payPayRestSDK.configure(conf);
+
+const httpsClient = new HttpsClient();
+payPayRestSDK.setHttpsClient(httpsClient);
 
 test('Unit Test - Get User Authorization Status', async () => {
     const userAuthorizationId = [6787435345];
@@ -20,14 +23,14 @@ test('Unit Test - Get User Authorization Status', async () => {
         },
         "data": {
             "userAuthorizationId": "6787435345",
-            "referenceIds": [ ],
+            "referenceIds": [],
             "status": "ACTIVE",
             "scopes": [
-            "continuous_payments"
+                "continuous_payments"
             ],
             "expireAt": 34534543534,
             "issuedAt": 45353535343
-            }
+        }
     };
 
     const mockHttpsCall = jest.spyOn(httpsClient, 'httpsCall');

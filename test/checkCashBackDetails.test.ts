@@ -1,5 +1,5 @@
 import { payPayRestSDK } from "../src/lib/paypay-rest-sdk";
-import { httpsClient } from '../src/lib/httpsClient';
+import { HttpsClient } from '../src/lib/httpsClient';
 
 const conf = {
     clientId: 'testId',
@@ -9,6 +9,9 @@ const conf = {
 };
 
 payPayRestSDK.configure(conf);
+
+const httpsClient = new HttpsClient();
+payPayRestSDK.setHttpsClient(httpsClient);
 
 test('Unit Test - Check cashback details', async () => {
 

@@ -79,5 +79,3 @@ export class HttpsClient {
     req.end();
   }
 }
-
-export const httpsClient = new HttpsClient();

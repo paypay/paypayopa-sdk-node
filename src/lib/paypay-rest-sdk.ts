@@ -3,7 +3,7 @@
  */
 import { Auth } from "./auth";
 import { Conf } from "./conf";
-import { httpsClient, HttpsClientError, HttpsClientMessage, HttpsClientSuccess } from "./httpsClient";
+import { HttpsClient, HttpsClientError, HttpsClientMessage, HttpsClientSuccess } from "./httpsClient";
 import { HmacSHA256, enc, algo } from "crypto-js";
 import { v4 as uuidv4 } from "uuid";
 import * as jwt from "jsonwebtoken";
@@ -19,10 +19,18 @@ class PayPayRestSDK {
   private perfMode: boolean = false;
   private readonly auth: Auth;
   private config: Conf;
+  private httpsClient: HttpsClient = new HttpsClient();
 
   constructor() {
     this.config = new Conf(this.productionMode, this.perfMode);
     this.auth = new Auth();
+  }
+
+  /**
+   * Replace the HttpsClient that this SDK client instance uses for API calls.
+   */
+  setHttpsClient(httpsClient: HttpsClient) {
+    this.httpsClient = httpsClient;
   }
 
   /**
@@ -130,7 +138,7 @@ class PayPayRestSDK {
     callback?: HttpsClientMessage): Promise<HttpsClientSuccess | HttpsClientError> => {
     const options = this.paypaySetupOptions(endpoint, payload);
     return new Promise((resolve) => {
-      httpsClient.httpsCall(options, payload, (result) => {
+      this.httpsClient.httpsCall(options, payload, (result) => {
         resolve(result);
         if (callback !== undefined) {
           callback(result);

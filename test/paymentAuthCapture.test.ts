@@ -1,5 +1,5 @@
 import { payPayRestSDK } from "../src/lib/paypay-rest-sdk";
-import { httpsClient } from '../src/lib/httpsClient';
+import { HttpsClient } from '../src/lib/httpsClient';
 
 const conf = {
     clientId: '5345435fsdfsr54353454',
@@ -9,6 +9,9 @@ const conf = {
 };
 
 payPayRestSDK.configure(conf);
+
+const httpsClient = new HttpsClient();
+payPayRestSDK.setHttpsClient(httpsClient);
 
 test('Unit Test - Payment Auth Capture', async () => {
 
@@ -20,7 +23,7 @@ test('Unit Test - Payment Auth Capture', async () => {
         },
         merchantCaptureId: "3432424",
         requestedAt: 324234234,
-        orderDescription: "Test Description"    
+        orderDescription: "Test Description",
     };
 
     const response = {
