@@ -32,12 +32,13 @@ jobs:
     - name: Test coverage
       run: yarn coverage
 
-    - name: Upload coverage GitHub artifact
-      uses: actions/upload-artifact@v2
-      with:
-        # Consumed by the `build-ci-target.yml` `upload-codeclimate` job.
-        name: lcov-${{ matrix.node-version }}
-        path: ./coverage/
+    - name: Code Climate before-build
+      env:
+        CC_TEST_REPORTER_ID: 92148e640143d0b54de61861a2786dd839f2f9b076a9da2769e5f02cd1cbd9eb
+      run: |
+           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+           chmod +x ./cc-test-reporter
+           ./cc-test-reporter before-build
 
     - name: Upload coverall reports
       uses: coverallsapp/github-action@master
@@ -47,3 +48,8 @@ jobs:
 
     - name: Upload to CoPilot
       run: bash <(curl -s https://copilot.blackducksoftware.com/ci/githubactions/scripts/upload)
+
+    - name: Code Climate after-build
+      env:
+        CC_TEST_REPORTER_ID: 92148e640143d0b54de61861a2786dd839f2f9b076a9da2769e5f02cd1cbd9eb
+      run: ./cc-test-reporter after-build --exit-code 0
