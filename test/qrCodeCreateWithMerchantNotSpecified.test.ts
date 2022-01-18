@@ -1,5 +1,5 @@
 import { payPayRestSDK } from "../src/lib/paypay-rest-sdk";
-import { httpsClient } from '../src/lib/httpsClient';
+import { HttpsClient } from '../src/lib/httpsClient';
 
 const conf = {
     clientId: '5345435fsdfsr54353454',
@@ -8,6 +8,9 @@ const conf = {
 };
 
 payPayRestSDK.configure(conf);
+
+const httpsClient = new HttpsClient();
+payPayRestSDK.setHttpsClient(httpsClient);
 
 test('Unit Test - Create QR code without specifying the merchant id', async () => {
 
