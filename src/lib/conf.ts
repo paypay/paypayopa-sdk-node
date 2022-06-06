@@ -1,5 +1,5 @@
-import * as pathConfig from "./conf.path.json";
-import { HOST_PATH } from "./constants";
+import * as defaultPathConfig from "./conf.path.json";
+import { HOST_PATH } from "./environments";
 
 export interface Config {
   PORT_NUMBER?: number;
@@ -13,20 +13,22 @@ export interface Config {
 }
 
 export class Conf {
-  private readonly pathConfig: Config = pathConfig;
-
   private readonly configLookup: any;
+  private portNumber: number;
+  private hostName: string;
 
-  constructor(productionMode: boolean = false, perfMode: boolean) {
-    this.configLookup = JSON.parse(JSON.stringify(this.pathConfig));
-    if (productionMode) {
-      this.configLookup.HOST_NAME = HOST_PATH.PROD
-    } else {
-      this.configLookup.HOST_NAME = HOST_PATH.STAGING;
+  constructor({ hostName, portNumber }: { hostName: string, portNumber?: number }) {
+    this.configLookup = JSON.parse(JSON.stringify(defaultPathConfig));
+    this.hostName = hostName;
+    this.portNumber = portNumber || 443;
+  }
+
+  static forEnvironment(env: 'PROD' | 'STAGING' | 'PERF_MODE'): Conf {
+    const hostName = HOST_PATH[env];
+    if (!hostName) {
+      throw new Error('no built-in environment named `' + env + '`');
     }
-    if (perfMode) {
-      this.configLookup.HOST_NAME = HOST_PATH.PERF_MODE;
-    }
+    return new Conf({ hostName });
   }
 
   getHttpsMethod(nameApi: string, nameMethod: string): string {
@@ -42,10 +44,10 @@ export class Conf {
   }
 
   getHostname() {
-    return this.configLookup.HOST_NAME;
+    return this.hostName;
   }
 
   getPortNumber() {
-    return this.configLookup.PORT_NUMBER ? this.configLookup.PORT_NUMBER : 443;
+    return this.portNumber;
   }
 }

@@ -1,3 +1,4 @@
+import { Conf } from "./lib/conf";
 import { payPayRestSDK, PayPayRestSDK } from "./lib/paypay-rest-sdk";
 
 export = {
@@ -29,5 +30,6 @@ export = {
   CheckCashBackDetails: payPayRestSDK.getCashBackDetails,
   ReversalCashBack: payPayRestSDK.reverseCashBack,
   CheckCashBackReversalDetails: payPayRestSDK.getReverseCashBackDetails,
-  PayPayRestSDK
+  PayPayRestSDK,
+  Conf,
 };

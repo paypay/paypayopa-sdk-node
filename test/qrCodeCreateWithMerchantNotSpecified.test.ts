@@ -4,7 +4,6 @@ import { HttpsClient } from '../src/lib/httpsClient';
 const conf = {
     clientId: '5345435fsdfsr54353454',
     clientSecret: 'dgfgdfgt46435gsdr35tte5',
-    productionMode: false
 };
 
 payPayRestSDK.configure(conf);

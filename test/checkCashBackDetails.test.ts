@@ -5,7 +5,6 @@ const conf = {
     clientId: 'testId',
     clientSecret: 'testId',
     merchantId: '2473982',
-    productionMode: false
 };
 
 payPayRestSDK.configure(conf);
