@@ -41,29 +41,36 @@ Once you have understood the payment flow, before we start the integration make 
 $ npm i @paypayopa/paypayopa-sdk-node
 ```
 ## Getting Started
-You need to setup your key and secret using the following:
+Before making any API calls, you must configure your API key, API secret, and which environment you are using.
 
-To work in production mode you need to specify your production API_KEY & API_SECRET along with a production_mode True boolean flag
+For a production API key and API secret, use the `"PROD"` environment name:
+
+
 ```javascript
 'use strict';
 const PAYPAY = require('@paypayopa/paypayopa-sdk-node');
 PAYPAY.Configure({
+    // Use production mode.
+    env: "PROD",
+
+    // Specify your production API key and production API secret.
     clientId: API_KEY,
     clientSecret: API_SECRET,
-    productionMode: true,
 });
 ```
-or
 
+To work in sandbox mode, specify your sandbox API key and API secret, and `"STAGING"` as the environment name. `"STAGING"` is the default, so you can also omit the `env`.
 
-To work in sandbox mode you need to specify your sandbox API_KEY & API_SECRET keys along with a False boolean flag or you could just omit the production_mode flag since it defaults to False if not specified
 ```javascript
 'use strict';
 const PAYPAY = require('@paypayopa/paypayopa-sdk-node');
 PAYPAY.Configure({
+    // Use sandbox mode (this is the default).
+    env: "STAGING",
+
+    // Specify your sandbox API key and sandbox API secret.
     clientId: API_KEY,
     clientSecret: API_SECRET,
-    productionMode: false,
 });
 ```
 

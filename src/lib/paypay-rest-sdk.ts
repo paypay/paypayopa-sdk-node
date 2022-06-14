@@ -15,14 +15,12 @@ interface Endpoint {
 }
 
 class PayPayRestSDK {
-  private productionMode: boolean = false;
-  private perfMode: boolean = false;
   private readonly auth: Auth;
   private config: Conf;
   private httpsClient: HttpsClient = new HttpsClient();
 
   constructor() {
-    this.config = new Conf(this.productionMode, this.perfMode);
+    this.config = Conf.forEnvironment('STAGING');
     this.auth = new Auth();
   }
 
@@ -37,17 +35,39 @@ class PayPayRestSDK {
    * Set authentication passed by end-user
    * @param clientConfig
    */
-  public configure = (clientConfig: { clientId: string; clientSecret: string; merchantId?: string; productionMode?: boolean; perfMode?: boolean; }) => {
+  public configure = (clientConfig: {
+    clientId: string;
+    clientSecret: string;
+    merchantId?: string;
+    /**
+     * @deprecated since version 2.1. Use {@code env} or {@code conf} instead.
+     */
+    productionMode?: boolean;
+    /**
+     * @deprecated since version 2.1. Use {@code env} or {@code conf} instead.
+     */
+    perfMode?: boolean;
+    /**
+     * Use one of the standard environments. {@code "STAGING"} can be used for testing, and is the default.
+     */
+    env?: 'PROD' | 'STAGING' | 'PERF_MODE';
+    /**
+     * Specify a custom host name and port. For common environments, use {@code env}.
+     */
+    conf?: Conf;
+  }) => {
     this.auth.setAuth(clientConfig.clientId, clientConfig.clientSecret, clientConfig.merchantId);
-    if (clientConfig.productionMode) {
-      this.productionMode = clientConfig.productionMode
+    if (clientConfig.conf !== undefined) {
+      this.config = clientConfig.conf;
+    } else if (clientConfig.env !== undefined) {
+      this.config = Conf.forEnvironment(clientConfig.env);
+    } else if (clientConfig.perfMode) {
+      this.config = Conf.forEnvironment('PERF_MODE');
+    } else if (clientConfig.productionMode) {
+      this.config = Conf.forEnvironment('PROD');
     } else {
-      this.productionMode = false;
+      this.config = Conf.forEnvironment('STAGING');
     }
-    if (clientConfig.perfMode) {
-      this.perfMode = clientConfig.perfMode
-    }
-    this.config = new Conf(this.productionMode, this.perfMode);
   }
 
   private createAuthHeader = (method: string, resourceUrl: string, body: unknown) => {
