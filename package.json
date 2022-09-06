@@ -27,7 +27,7 @@
   "dependencies": {
     "crypto-js": "^4.1.1",
     "jsonwebtoken": "^8.5.1",
-    "uuid": "^8.3.0"
+    "uuid": "^9.0.0"
   },
   "engines": {
     "node": ">=8.0.0",
