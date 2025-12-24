@@ -14,6 +14,8 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b17690606bb64c51a1c65c65a8a75b1f)](https://app.codacy.com/gh/paypay/paypayopa-sdk-node?utm_source=github.com&utm_medium=referral&utm_content=paypay/paypayopa-sdk-node&utm_campaign=Badge_Grade_Settings)
 [![BCH compliance](https://bettercodehub.com/edge/badge/paypay/paypayopa-sdk-node?branch=master)](https://bettercodehub.com/)
 
+> **Note:** This SDK is provided to assist merchants in integrating with our APIs. While it remains available for use, ongoing maintenance is limited and updates may not be released regularly. Most new features and enhancements are introduced directly at the API level, and we recommend referring to the latest API documentation for the most up-to-date capabilities.
+
 So you are a developer and want to start accepting payments using PayPay. PayPay's Payment SDK is the simplest way to achieve the integration. With PayPay's Payment SDK, you can build a custom Payment checkout process to suit your unique business needs and branding guidelines.
 
 # When to use QR Code Payments
@@ -29,7 +31,7 @@ Following diagram defines the flow for Dynamic QR Code.
 
 We recommend that the merchant implements a Polling of the Get payment Details API with a 4-5 second interval in order to know the status of the transaction.
 
-## Lets get Started
+## Let's get Started
 Once you have understood the payment flow, before we start the integration make sure you have:
 
 - [Registered](https://developer.paypay.ne.jp/) for a PayPay developer/merchant Account
@@ -250,7 +252,7 @@ let payload = {
 };
 
 const response = await PAYPAY.PaymentAuthRevert(payload);
-const body = response.BODY:
+const body = response.BODY;
 console.log(body.resultInfo.code);
 ```
 For List of params refer to the API guide :
@@ -265,7 +267,7 @@ So you want to confirm the status of the refund, maybe because the request for t
 
 
 ```javascript
-let merchantPaymentId = 'merchantRefundId';
+let merchantRefundId = 'merchantRefundId';
 const response = await PAYPAY.GetRefundDetails([merchantRefundId]);
 const body = response.BODY;
 console.log(body.resultInfo.code);
@@ -439,7 +441,7 @@ console.log(body.resultInfo.code);
 console.log(body.data.status);
 ```
 
-Did you get **SUCCESS** in the print statement above, if yes then the API execution has happen correctly.
+Did you get **SUCCESS** in the print statement above, if yes then the API execution has happened correctly.
 
 On successful payment, the status in response.data.status will be **COMPLETED**
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/webcashier#operation/getPaymentDetails)
@@ -466,13 +468,13 @@ const body = response.BODY;
 console.log(body.resultInfo.code);
 ```
 
-Did you get **SUCCESS** in the print statement above, if yes then the API execution has happend correctly.
+Did you get **SUCCESS** in the print statement above, if yes then the API execution has happened correctly.
 
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/direct_debit#operation/cancelPayment)
 
 
 ### Refund a payment
-So the user has decided to return the goods they have purchased and needs to be giveb a refund. Following are the important parameters that you can provide for this method:
+So the user has decided to return the goods they have purchased and needs to be given a refund. Following are the important parameters that you can provide for this method:
 
 | Field  | Required  |Type   | Description  |  
 |---|---|---|---|
@@ -514,13 +516,13 @@ So you want to confirm the status of the refund, maybe because the request for t
 |merchantRefundId   |  Yes |string <= 64 characters  |The unique refund transaction id provided by merchant  |
 
 ```javascript
-let merchantPaymentId = 'merchantRefundId'
+let merchantRefundId = 'merchantRefundId';
 const response = await PAYPAY.GetRefundDetails([merchantRefundId]);
 const body = response.BODY;
 // Printing if the method call was SUCCESS
 console.log(body.resultInfo.code);
 ```
-Did you get **SUCCESS** in the print statement above, if yes then the API execution has happen correctly.
+Did you get **SUCCESS** in the print statement above, if yes then the API execution has happened correctly.
 
 For details of all the request and response parameters , check our [API Documentation guide](https://www.paypay.ne.jp/opa/doc/v1.0/direct_debit#operation/getRefundDetails).
 
