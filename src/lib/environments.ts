@@ -1,5 +1,5 @@
 export const HOST_PATH = {
-    PROD: 'api.paypay.ne.jp',
-    STAGING: 'stg-api.sandbox.paypay.ne.jp',
-    PERF_MODE: 'perf-api.paypay.ne.jp',
+    PROD: 'apigw.paypay.ne.jp',
+    STAGING: 'apigw.sandbox.paypay.ne.jp',
+    PERF_MODE: 'perf-apigw.paypay.ne.jp',
 };

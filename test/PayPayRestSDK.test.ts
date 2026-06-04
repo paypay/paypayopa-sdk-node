@@ -39,7 +39,7 @@ test('Unit Test - Check that default environment is sandbox', async () => {
 
     expect(mockHttpsClient.httpsCall.mock.calls.length).toBe(1);
     const call = mockHttpsClient.httpsCall.mock.calls[0];
-    expect(call[0].hostname).toContain('stg');
+    expect(call[0].hostname).toBe('apigw.sandbox.paypay.ne.jp');
 });
 
 test('Unit Test - Check that STAGING environment is sandbox', async () => {
@@ -60,7 +60,7 @@ test('Unit Test - Check that STAGING environment is sandbox', async () => {
 
     expect(mockHttpsClient.httpsCall.mock.calls.length).toBe(1);
     const call = mockHttpsClient.httpsCall.mock.calls[0];
-    expect(call[0].hostname).toContain('stg');
+    expect(call[0].hostname).toBe('apigw.sandbox.paypay.ne.jp');
 });
 
 test('Unit Test - Check that PROD environment is production', async () => {
@@ -81,7 +81,7 @@ test('Unit Test - Check that PROD environment is production', async () => {
 
     expect(mockHttpsClient.httpsCall.mock.calls.length).toBe(1);
     const call = mockHttpsClient.httpsCall.mock.calls[0];
-    expect(call[0].hostname).toBe('api.paypay.ne.jp');
+    expect(call[0].hostname).toBe('apigw.paypay.ne.jp');
 });
 
 test('Unit Test - Check that PERF_MODE environment is perf', async () => {
@@ -123,7 +123,7 @@ test('Unit Test - Check that deprecated perfMode is perf', async () => {
 
     expect(mockHttpsClient.httpsCall.mock.calls.length).toBe(1);
     const call = mockHttpsClient.httpsCall.mock.calls[0];
-    expect(call[0].hostname).toBe('perf-api.paypay.ne.jp');
+    expect(call[0].hostname).toBe('perf-apigw.paypay.ne.jp');
 });
 
 test('Unit Test - Check that deprecated productionMode is prod', async () => {
@@ -144,5 +144,5 @@ test('Unit Test - Check that deprecated productionMode is prod', async () => {
 
     expect(mockHttpsClient.httpsCall.mock.calls.length).toBe(1);
     const call = mockHttpsClient.httpsCall.mock.calls[0];
-    expect(call[0].hostname).toBe('api.paypay.ne.jp');
+    expect(call[0].hostname).toBe('apigw.paypay.ne.jp');
 });
